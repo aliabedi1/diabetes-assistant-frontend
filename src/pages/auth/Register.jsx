@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Alert from "../../components/ui/Alert";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
@@ -8,6 +9,7 @@ import { useAuthStore } from "../../store/auth.store";
 import { getApiError } from "../../utils/apiErrors";
 
 export default function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
   const loading = useAuthStore((state) => state.loading);
@@ -31,17 +33,17 @@ export default function Register() {
   }
 
   return (
-    <AuthLayout title="Create account" subtitle="Start tracking glucose and medical logs.">
+    <AuthLayout title={t("auth.createAccount")} subtitle={t("auth.registerSubtitle")}>
       <form onSubmit={submit} className="space-y-5">
         <Alert>{error}</Alert>
-        <Input label="Name" name="name" value={form.name} onChange={updateField} placeholder="Your name" required />
-        <Input label="Email" name="email" type="email" value={form.email} onChange={updateField} placeholder="you@example.com" required />
-        <Input label="Password" name="password" type="password" value={form.password} onChange={updateField} placeholder="Minimum 8 characters" required minLength="8" />
-        <Input label="Confirm password" name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder="Repeat password" required minLength="8" />
-        <Button className="w-full" disabled={loading}>{loading ? "Creating..." : "Create account"}</Button>
+        <Input label={t("auth.name")} name="name" value={form.name} onChange={updateField} placeholder={t("auth.namePlaceholder")} required />
+        <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
+        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
+        <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
+        <Button className="w-full" disabled={loading}>{loading ? t("auth.creating") : t("auth.register")}</Button>
       </form>
-      <p className="mt-6 text-center text-sm text-slate-500">
-        Already have an account? <Link to="/login" className="font-bold text-sky-600">Login</Link>
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+        {t("auth.haveAccount")} <Link to="/login" className="font-bold text-sky-600 dark:text-sky-400">{t("auth.signIn")}</Link>
       </p>
     </AuthLayout>
   );

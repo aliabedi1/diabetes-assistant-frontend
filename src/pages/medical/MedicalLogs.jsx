@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Alert from "../../components/ui/Alert";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
@@ -8,6 +9,7 @@ import { getApiError } from "../../utils/apiErrors";
 import { formatDate, unwrapCollection } from "../../utils/data";
 
 export default function MedicalLogs() {
+  const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [form, setForm] = useState({ title: "", description: "", logged_at: new Date().toISOString().slice(0, 16) });
   const [loading, setLoading] = useState(true);
@@ -24,10 +26,10 @@ export default function MedicalLogs() {
 
   useEffect(() => {
     loadLogs().catch((requestError) => {
-      setError(getApiError(requestError, "Unable to load medical logs."));
+      setError(getApiError(requestError, t("medical.errorLoading")));
       setLoading(false);
     });
-  }, []);
+  }, [t]);
 
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -42,10 +44,10 @@ export default function MedicalLogs() {
     try {
       await createMedicalLog(form);
       setForm({ title: "", description: "", logged_at: new Date().toISOString().slice(0, 16) });
-      setSuccess("Medical log saved.");
+      setSuccess(t("medical.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
-      setError(getApiError(requestError, "Unable to save medical log."));
+      setError(getApiError(requestError, t("medical.errorSaving")));
     } finally {
       setSaving(false);
     }
@@ -54,51 +56,51 @@ export default function MedicalLogs() {
   return (
     <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
       <Card>
-        <h2 className="text-2xl font-black text-slate-950">Add medical log</h2>
-        <p className="mt-2 text-slate-500">Posts to Laravel route POST /api/medical/logs.</p>
+        <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("medical.addLog")}</h2>
+        <p className="mt-2 text-slate-500 dark:text-slate-400">{t("medical.postRoute")}</p>
         <form onSubmit={submit} className="mt-6 space-y-5">
           <Alert>{error}</Alert>
           <Alert type="success">{success}</Alert>
-          <Input label="Title" name="title" value={form.title} onChange={updateField} placeholder="Medication, appointment, symptom..." required />
-          <Input label="Logged at" name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
+          <Input label={t("medical.title")} name="title" value={form.title} onChange={updateField} placeholder={t("medical.titlePlaceholder")} required />
+          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700">Description</span>
+            <span className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">{t("medical.description")}</span>
             <textarea
               name="description"
               value={form.description}
               onChange={updateField}
               rows="5"
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
-              placeholder="Write notes for this medical event..."
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100 dark:border-slate-600 dark:bg-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-sky-500 dark:focus:ring-sky-900"
+              placeholder={t("medical.descriptionPlaceholder")}
               required
             />
           </label>
-          <Button className="w-full" disabled={saving}>{saving ? "Saving..." : "Save medical log"}</Button>
+          <Button className="w-full" disabled={saving}>{saving ? t("medical.saving") : t("medical.saveLog")}</Button>
         </form>
       </Card>
 
       <Card>
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-black text-slate-950">Medical logs</h2>
-            <p className="mt-1 text-slate-500">Fetched from GET /api/medical/logs.</p>
+            <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("medical.medicalLogs")}</h2>
+            <p className="mt-1 text-slate-500 dark:text-slate-400">{t("medical.fetchRoute")}</p>
           </div>
-          <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-bold text-violet-700">{logs.length} logs</span>
+          <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-bold text-violet-700 dark:bg-violet-900 dark:text-violet-300">{logs.length} {t("medical.logs")}</span>
         </div>
         <div className="space-y-3">
-          {loading && <p className="text-slate-500">Loading medical logs...</p>}
+          {loading && <p className="text-slate-500 dark:text-slate-400">{t("medical.loadingLogs")}</p>}
           {!loading && logs.map((log) => (
-            <div key={log.id || `${log.created_at}-${log.title}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5">
+            <div key={log.id || `${log.created_at}-${log.title}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-700">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xl font-black text-slate-950">{log.title || log.type || "Medical note"}</p>
-                  <p className="mt-1 text-sm font-semibold text-slate-500">{formatDate(log.logged_at || log.created_at)}</p>
+                  <p className="text-xl font-black text-slate-950 dark:text-white">{log.title || log.type || t("dashboard.medicalNote")}</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">{formatDate(log.logged_at || log.created_at)}</p>
                 </div>
               </div>
-              <p className="mt-3 text-slate-600">{log.description || log.notes || log.note || "No description"}</p>
+              <p className="mt-3 text-slate-600 dark:text-slate-300">{log.description || log.notes || log.note || t("dashboard.noDescription")}</p>
             </div>
           ))}
-          {!loading && logs.length === 0 && <p className="rounded-3xl bg-slate-50 p-6 text-center text-slate-500">No medical logs yet.</p>}
+          {!loading && logs.length === 0 && <p className="rounded-3xl bg-slate-50 p-6 text-center text-slate-500 dark:bg-slate-700 dark:text-slate-400">{t("medical.noLogs")}</p>}
         </div>
       </Card>
     </div>

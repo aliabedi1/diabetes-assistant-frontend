@@ -1,0 +1,131 @@
+{
+  "app": {
+    "name": "دستیار دیابت",
+    "tagline": "لاراول سنکتوم + ری‌اکت + تیلویند"
+  },
+  "nav": {
+    "overview": "نمای کلی",
+    "glucoseLogs": "سوابق قند خون",
+    "medicalLogs": "سوابق پزشکی",
+    "login": "ورود",
+    "register": "ثبت‌نام",
+    "startFree": "شروع رایگان",
+    "logout": "خروج"
+  },
+  "home": {
+    "title": "یک همراه مدرن برای ثبت روزانه سلامتی دیابت",
+    "description": "خوانش‌های قند خون را پیگیری کنید، یادداشت‌های پزشکی ذخیره کنید و داده‌های سلامت خود را از طریق API لاراول سازماندهی کنید.",
+    "getStarted": "شروع کنید",
+    "openDashboard": "باز کردن داشبورد",
+    "healthSummary": "خلاصه سلامت",
+    "today": "امروز",
+    "synced": "همگام‌سازی شده",
+    "glucose": "قند خون",
+    "stable": "محدوده پایدار",
+    "medicalLogs": "سوابق پزشکی",
+    "thisWeek": "این هفته",
+    "lastCheckIn": "آخرین بررسی",
+    "morningReading": "خوانش صبح",
+    "notes": "یادداشت"
+  },
+  "auth": {
+    "welcomeBack": "خوش آمدید",
+    "loginSubtitle": "با حساب کاربری API لاراول خود وارد شوید.",
+    "email": "ایمیل",
+    "password": "رمز عبور",
+    "emailPlaceholder": "example@example.com",
+    "passwordPlaceholder": "••••••••",
+    "signingIn": "در حال ورود...",
+    "login": "ورود",
+    "noAccount": "هنوز حساب کاربری ندارید؟",
+    "createOne": "ایجاد کنید",
+    "createAccount": "ایجاد حساب کاربری",
+    "registerSubtitle": "برای یک حساب کاربری جدید API لاراول ثبت‌نام کنید.",
+    "name": "نام",
+    "namePlaceholder": "نام شما",
+    "confirmPassword": "تایید رمز عبور",
+    "creating": "در حال ایجاد حساب...",
+    "register": "ثبت‌نام",
+    "haveAccount": "قبلاً حساب کاربری دارید؟",
+    "signIn": "وارد شوید"
+  },
+  "dashboard": {
+    "welcomeBack": "خوش آمدید",
+    "healthTracker": "ردیاب سلامت",
+    "overview": "نمای کلی",
+    "keepInSync": "خوانش‌های قند خون و یادداشت‌های پزشکی امروز را همگام نگه دارید.",
+    "addGlucose": "افزودن قند خون",
+    "addMedicalNote": "افزودن یادداشت پزشکی",
+    "latestGlucose": "آخرین قند خون",
+    "averageGlucose": "میانگین قند خون",
+    "medicalLogs": "سوابق پزشکی",
+    "noReadingsYet": "هنوز خوانشی وجود ندارد",
+    "totalReadings": "کل خوانش‌ها",
+    "totalNotesSaved": "کل یادداشت‌های ذخیره شده",
+    "recentGlucose": "قند خون اخیر",
+    "viewAll": "مشاهده همه",
+    "loadingReadings": "در حال بارگذاری خوانش‌ها...",
+    "noGlucoseReadings": "هنوز خوانش قند خونی وجود ندارد.",
+    "recentMedicalLogs": "سوابق پزشکی اخیر",
+    "loadingNotes": "در حال بارگذاری یادداشت‌ها...",
+    "noMedicalLogs": "هنوز سابقه پزشکی وجود ندارد.",
+    "medicalNote": "یادداشت پزشکی",
+    "noDescription": "بدون توضیحات"
+  },
+  "glucose": {
+    "addReading": "افزودن خوانش قند خون",
+    "postRoute": "ارسال به مسیر لاراول POST /api/glucose/logs.",
+    "glucoseAmount": "مقدار قند خون",
+    "loggedAt": "ثبت شده در",
+    "notes": "یادداشت‌ها",
+    "notesPlaceholder": "قبل از صبحانه، بعد از پیاده‌روی...",
+    "saving": "در حال ذخیره...",
+    "saveReading": "ذخیره خوانش",
+    "glucoseLogs": "سوابق قند خون",
+    "fetchRoute": "دریافت شده از GET /api/glucose/logs.",
+    "logs": "سوابق",
+    "loadingLogs": "در حال بارگذاری سوابق قند خون...",
+    "noLogs": "هنوز سابقه قند خونی وجود ندارد.",
+    "savedSuccess": "خوانش قند خون ذخیره شد.",
+    "errorSaving": "ذخیره خوانش قند خون با خطا مواجه شد.",
+    "errorLoading": "بارگذاری سوابق قند خون با خطا مواجه شد."
+  },
+  "medical": {
+    "addLog": "افزودن سابقه پزشکی",
+    "postRoute": "ارسال به مسیر لاراول POST /api/medical/logs.",
+    "title": "عنوان",
+    "titlePlaceholder": "مثلاً ویزیت دکتر، تغییر دارو...",
+    "description": "توضیحات",
+    "descriptionPlaceholder": "یادداشت‌های تفصیلی درباره این سابقه پزشکی...",
+    "saving": "در حال ذخیره...",
+    "saveLog": "ذخیره سابقه",
+    "medicalLogs": "سوابق پزشکی",
+    "fetchRoute": "دریافت شده از GET /api/medical/logs.",
+    "logs": "سوابق",
+    "loadingLogs": "در حال بارگذاری سوابق پزشکی...",
+    "noLogs": "هنوز سابقه پزشکی وجود ندارد.",
+    "savedSuccess": "سابقه پزشکی ذخیره شد.",
+    "errorSaving": "ذخیره سابقه پزشکی با خطا مواجه شد.",
+    "errorLoading": "بارگذاری سوابق پزشکی با خطا مواجه شد."
+  },
+  "notFound": {
+    "title": "صفحه پیدا نشد",
+    "description": "صفحه‌ای که دنبالش هستید وجود ندارد.",
+    "backHome": "بازگشت به خانه"
+  },
+  "theme": {
+    "light": "روشن",
+    "dark": "تاریک",
+    "toggle": "تغییر تم"
+  },
+  "language": {
+    "english": "انگلیسی",
+    "persian": "فارسی",
+    "toggle": "تغییر زبان"
+  },
+  "common": {
+    "loading": "در حال بارگذاری...",
+    "error": "خطا",
+    "success": "موفق"
+  }
+}

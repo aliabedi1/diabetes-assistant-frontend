@@ -1,29 +1,40 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import ThemeToggle from "../components/ThemeToggle";
+import LanguageToggle from "../components/LanguageToggle";
 
 export default function AuthLayout({ children, title, subtitle }) {
+  const { t } = useTranslation();
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-slate-950 text-white dark:bg-slate-950">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-[-10%] top-[-10%] h-80 w-80 rounded-full bg-sky-500/30 blur-3xl" />
         <div className="absolute bottom-[-15%] right-[-5%] h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />
       </div>
       <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 px-6 py-10 lg:grid-cols-[1fr_460px]">
         <section>
-          <Link to="/" className="inline-flex items-center gap-3 text-lg font-bold">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-sky-600">D</span>
-            Diabetes Assistant
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link to="/" className="inline-flex items-center gap-3 text-lg font-bold">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-sky-600">D</span>
+              {t("app.name")}
+            </Link>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
+          </div>
           <h1 className="mt-12 max-w-2xl text-5xl font-black tracking-tight lg:text-6xl">
-            Better daily diabetes tracking, beautifully organized.
+            {t("home.title")}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-            Connect to your Laravel Sanctum API, record glucose readings, and keep medical notes in one calm dashboard.
+            {t("home.description")}
           </p>
         </section>
-        <section className="rounded-[2rem] border border-white/10 bg-white p-8 text-slate-950 shadow-2xl shadow-black/30">
+        <section className="rounded-[2rem] border border-white/10 bg-white p-8 text-slate-950 shadow-2xl shadow-black/30 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
           <div className="mb-8">
             <h2 className="text-3xl font-bold">{title}</h2>
-            <p className="mt-2 text-slate-500">{subtitle}</p>
+            <p className="mt-2 text-slate-500 dark:text-slate-400">{subtitle}</p>
           </div>
           {children}
         </section>

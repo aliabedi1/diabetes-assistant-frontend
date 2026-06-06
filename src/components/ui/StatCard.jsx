@@ -11,9 +11,9 @@ export default function StatCard({ label, value, hint, tone = "sky" }) {
   return (
     <Card className="overflow-hidden">
       <div className={`mb-5 h-2 w-20 rounded-full bg-gradient-to-r ${tones[tone]}`} />
-      <p className="text-sm font-medium text-slate-500">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
-      {hint && <p className="mt-2 text-sm text-slate-500">{hint}</p>}
+      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-slate-950 dark:text-white">{value}</p>
+      {hint && <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{hint}</p>}
     </Card>
   );
 }

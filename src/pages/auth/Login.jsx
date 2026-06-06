@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Alert from "../../components/ui/Alert";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
@@ -8,6 +9,7 @@ import { useAuthStore } from "../../store/auth.store";
 import { getApiError } from "../../utils/apiErrors";
 
 export default function Login() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const login = useAuthStore((state) => state.login);
@@ -32,15 +34,15 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Login with your Laravel API account.">
+    <AuthLayout title={t("auth.welcomeBack")} subtitle={t("auth.loginSubtitle")}>
       <form onSubmit={submit} className="space-y-5">
         <Alert>{error}</Alert>
-        <Input label="Email" name="email" type="email" value={form.email} onChange={updateField} placeholder="you@example.com" required />
-        <Input label="Password" name="password" type="password" value={form.password} onChange={updateField} placeholder="••••••••" required />
-        <Button className="w-full" disabled={loading}>{loading ? "Signing in..." : "Login"}</Button>
+        <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
+        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required />
+        <Button className="w-full" disabled={loading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
       </form>
-      <p className="mt-6 text-center text-sm text-slate-500">
-        No account yet? <Link to="/register" className="font-bold text-sky-600">Create one</Link>
+      <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+        {t("auth.noAccount")} <Link to="/register" className="font-bold text-sky-600 dark:text-sky-400">{t("auth.createOne")}</Link>
       </p>
     </AuthLayout>
   );
