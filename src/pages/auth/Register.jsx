@@ -40,7 +40,9 @@ export default function Register() {
         <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
         <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
         <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
-        <Button className="w-full" disabled={loading}>{loading ? t("auth.creating") : t("auth.register")}</Button>
+        <Button className="w-full" disabled={loading}>
+          {loading ? (t("auth.creating") || "Creating account...") : (t("auth.register") || "Register")}
+        </Button>
       </form>
       <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
         {t("auth.haveAccount")} <Link to="/login" className="font-bold text-sky-600 dark:text-sky-400">{t("auth.signIn")}</Link>

@@ -42,7 +42,7 @@ export default function Login() {
         <Button className="w-full" disabled={loading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
       </form>
       <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-        {t("auth.noAccount")} <Link to="/register" className="font-bold text-sky-600 dark:text-sky-400">{t("auth.createOne")}</Link>
+        {(t("auth.noAccount") || "No account yet?")} <Link to="/register" className="font-bold text-sky-600 dark:text-sky-400">{t("auth.createOne") || "Create one"}</Link>
       </p>
     </AuthLayout>
   );

@@ -1,21 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
 
 export default function LanguageToggle() {
   const { i18n, t } = useTranslation();
-
-  useEffect(() => {
-    const currentLang = i18n.language;
-    document.documentElement.dir = currentLang === "fa" ? "rtl" : "ltr";
-    document.documentElement.lang = currentLang;
-  }, [i18n.language]);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === "en" ? "fa" : "en";
     i18n.changeLanguage(newLang);
     localStorage.setItem("language", newLang);
-    document.documentElement.dir = newLang === "fa" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
   };
 
   return (

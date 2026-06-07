@@ -7,10 +7,10 @@ export default function AuthLayout({ children, title, subtitle }) {
   const { t } = useTranslation();
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white dark:bg-slate-950">
+    <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-[-10%] top-[-10%] h-80 w-80 rounded-full bg-sky-500/30 blur-3xl" />
-        <div className="absolute bottom-[-15%] right-[-5%] h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl" />
+        <div className="absolute left-[-10%] top-[-10%] h-80 w-80 rounded-full bg-sky-300/35 blur-3xl dark:bg-sky-500/25" />
+        <div className="absolute bottom-[-15%] right-[-5%] h-96 w-96 rounded-full bg-emerald-300/30 blur-3xl dark:bg-emerald-500/20" />
       </div>
       <div className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-10 px-6 py-10 lg:grid-cols-[1fr_460px]">
         <section>
@@ -27,11 +27,11 @@ export default function AuthLayout({ children, title, subtitle }) {
           <h1 className="mt-12 max-w-2xl text-5xl font-black tracking-tight lg:text-6xl">
             {t("home.title")}
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 dark:text-slate-300">
             {t("home.description")}
           </p>
         </section>
-        <section className="rounded-[2rem] border border-white/10 bg-white p-8 text-slate-950 shadow-2xl shadow-black/30 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 text-slate-950 shadow-xl shadow-slate-200/70 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:shadow-none">
           <div className="mb-8">
             <h2 className="text-3xl font-bold">{title}</h2>
             <p className="mt-2 text-slate-500 dark:text-slate-400">{subtitle}</p>

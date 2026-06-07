@@ -24,7 +24,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900">
-      <aside className="fixed inset-y-0 left-0 hidden w-72 border-r border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-slate-700 dark:bg-slate-800/90 lg:block">
+      <aside className="dashboard-sidebar fixed inset-y-0 start-0 hidden w-72 border-r border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-slate-700 dark:bg-slate-800/90 lg:block">
         <div className="flex items-center gap-3">
           <div className="grid h-12 w-12 place-items-center rounded-2xl bg-sky-600 text-lg font-black text-white">D</div>
           <div>
@@ -48,7 +48,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
       </aside>
-      <div className="lg:pl-72">
+      <div className="dashboard-shell lg:ps-72">
         <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
           <div className="flex items-center justify-between gap-4 px-5 py-4 lg:px-8">
             <div>
