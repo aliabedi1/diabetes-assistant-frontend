@@ -30,6 +30,12 @@ VITE_API_URL=http://your-laravel-app.test/api
 
 - Token-based auth with persistent local storage.
 - Protected dashboard routes.
+- High-efficiency dashboard with:
+  - Interactive glucose trend visualization (`3h`, `12h`, `24h`, `7d` filters).
+  - Quick Add module for rapid glucose + short clinical note entry.
+  - Contextual merged history feed (glucose logs + medical notes).
+  - Health Snapshot (7-day average, highs/lows, status rating).
+  - Compact profile card and responsive mobile-first layout.
 - Glucose log list and create form.
 - Medical log list and create form.
 - Responsive Tailwind UI.

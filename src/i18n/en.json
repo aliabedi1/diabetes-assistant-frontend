@@ -47,7 +47,8 @@
     "creating": "Creating account...",
     "register": "Register",
     "haveAccount": "Already have an account?",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "sessionExpired": "Your session expired. Please login again to access the dashboard."
   },
   "dashboard": {
     "welcomeBack": "Welcome back",

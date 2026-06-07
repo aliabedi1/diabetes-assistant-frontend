@@ -57,7 +57,7 @@ export default function GlucoseLogs() {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+    <div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">
       <Card>
         <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("glucose.addReading")}</h2>
         <p className="mt-2 text-slate-500 dark:text-slate-400">{t("glucose.postRoute")}</p>
@@ -72,7 +72,7 @@ export default function GlucoseLogs() {
       </Card>
 
       <Card>
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("glucose.glucoseLogs")}</h2>
             <p className="mt-1 text-slate-500 dark:text-slate-400">{t("glucose.fetchRoute")}</p>

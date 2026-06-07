@@ -14,33 +14,33 @@ export default function Home() {
         <div className="absolute left-10 top-20 h-72 w-72 rounded-full bg-sky-300/35 blur-3xl dark:bg-sky-500/20" />
         <div className="absolute bottom-10 right-10 h-96 w-96 rounded-full bg-emerald-300/30 blur-3xl dark:bg-emerald-400/15" />
       </div>
-      <section className="relative mx-auto max-w-7xl px-6 py-8">
-        <nav className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 text-lg font-black">
+      <section className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+        <nav className="flex flex-wrap items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-3 text-base font-black sm:text-lg">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-sky-600">D</span>
             {t("app.name")}
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
             <ThemeToggle />
             <LanguageToggle />
-            <Link to="/login" className="rounded-2xl px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10">{t("nav.login")}</Link>
-            <Link to="/register" className="rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300">{t("nav.register") || "Register"}</Link>
+            <Link to="/login" className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10 sm:px-5 sm:py-3">{t("nav.login")}</Link>
+            <Link to="/register" className="rounded-2xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 sm:px-5 sm:py-3">{t("nav.register") || "Register"}</Link>
           </div>
         </nav>
-        <div className="grid min-h-[calc(100vh-120px)] items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid min-h-[calc(100vh-120px)] items-center gap-8 py-10 sm:gap-12 sm:py-16 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="mb-5 inline-flex rounded-full border border-sky-200 bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700 dark:border-white/10 dark:bg-white/10 dark:text-sky-100">
               {t("app.tagline")}
             </p>
-            <h1 className="max-w-3xl text-5xl font-black leading-tight tracking-tight md:text-7xl">
+            <h1 className="max-w-3xl text-3xl font-black leading-tight tracking-tight sm:text-5xl md:text-7xl">
               {t("home.title")}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:mt-6 sm:text-lg sm:leading-8">
               {t("home.description")}
             </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Button as={Link} to="/register">{t("home.getStarted") || "Get started"}</Button>
-              <Button as={Link} to="/login" variant="secondary">{t("home.openDashboard")}</Button>
+            <div className="mt-8 grid gap-3 sm:mt-10 sm:flex sm:flex-wrap sm:gap-4">
+              <Button as={Link} to="/register" className="w-full sm:w-auto">{t("home.getStarted") || "Get started"}</Button>
+              <Button as={Link} to="/login" variant="secondary" className="w-full sm:w-auto">{t("home.openDashboard")}</Button>
             </div>
           </div>
           <Card className="bg-white/95 text-slate-950 shadow-lg shadow-slate-200/60 dark:bg-slate-800/95 dark:text-white dark:shadow-none">

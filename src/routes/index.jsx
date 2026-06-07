@@ -6,6 +6,8 @@ import Home from "../pages/Home";
 import Dashboard from "../pages/dashboard/Dashboard";
 import GlucoseLogs from "../pages/glucose/GlucoseLogs";
 import MedicalLogs from "../pages/medical/MedicalLogs";
+import DailyJournal from "../pages/archive/DailyJournal";
+import MasterArchive from "../pages/archive/MasterArchive";
 import NotFound from "../pages/notfound/NotFound";
 
 import ProtectedRoute from "./ProtectedRoutes";
@@ -27,6 +29,8 @@ export default function AppRoutes() {
                 }
             >
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/journal" element={<DailyJournal />} />
+                <Route path="/archive" element={<MasterArchive />} />
                 <Route path="/glucose" element={<GlucoseLogs />} />
                 <Route path="/medical" element={<MedicalLogs />} />
             </Route>

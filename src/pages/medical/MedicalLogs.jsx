@@ -54,7 +54,7 @@ export default function MedicalLogs() {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[420px_1fr]">
+    <div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">
       <Card>
         <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("medical.addLog")}</h2>
         <p className="mt-2 text-slate-500 dark:text-slate-400">{t("medical.postRoute")}</p>
@@ -80,7 +80,7 @@ export default function MedicalLogs() {
       </Card>
 
       <Card>
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("medical.medicalLogs")}</h2>
             <p className="mt-1 text-slate-500 dark:text-slate-400">{t("medical.fetchRoute")}</p>

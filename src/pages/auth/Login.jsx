@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Alert from "../../components/ui/Alert";
@@ -16,6 +16,14 @@ export default function Login() {
   const loading = useAuthStore((state) => state.loading);
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [info, setInfo] = useState(localStorage.getItem("auth_flash_message") || "");
+
+  useEffect(() => {
+    if (localStorage.getItem("auth_flash_message")) {
+      localStorage.removeItem("auth_flash_message");
+      localStorage.removeItem("auth_flash_type");
+    }
+  }, []);
 
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -36,6 +44,7 @@ export default function Login() {
   return (
     <AuthLayout title={t("auth.welcomeBack")} subtitle={t("auth.loginSubtitle")}>
       <form onSubmit={submit} className="space-y-5">
+        <Alert type="info">{info}</Alert>
         <Alert>{error}</Alert>
         <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
         <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required />
