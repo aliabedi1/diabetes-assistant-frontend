@@ -49,15 +49,15 @@ export default function DailyJournal() {
       time: new Date(log.logged_at || log.created_at),
       type: "glucose",
       title: `${log.glucose_amount || log.amount} mg/dL`,
-      detail: log.notes || log.note || "",
+      detail: log.note || log.notes || "",
     }));
 
     const noteItems = medicalLogs.map((log) => ({
-      id: `m-${log.id || `${log.created_at}-${log.title}`}`,
+      id: `m-${log.id || `${log.created_at}-${log.type || "medical"}`}`,
       time: new Date(log.logged_at || log.created_at),
-      type: "note",
-      title: log.title || t("dashboard.medicalNote"),
-      detail: log.description || log.note || log.notes || t("dashboard.noDescription"),
+      type: "medical",
+      title: log.type || t("dashboard.medicalNote"),
+      detail: log.note || t("dashboard.noDescription"),
     }));
 
     return [...glucoseItems, ...noteItems]

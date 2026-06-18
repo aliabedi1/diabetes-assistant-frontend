@@ -13,7 +13,7 @@ export default function Register() {
   const navigate = useNavigate();
   const register = useAuthStore((state) => state.register);
   const loading = useAuthStore((state) => state.loading);
-  const [form, setForm] = useState({ name: "", email: "", password: "", password_confirmation: "" });
+  const [form, setForm] = useState({ username: "", name: "", last_name: "", email: "", password: "", password_confirmation: "" });
   const [error, setError] = useState("");
 
   function updateField(event) {
@@ -37,9 +37,12 @@ export default function Register() {
       <form onSubmit={submit} className="space-y-5">
         <Alert>{error}</Alert>
         <Input label={t("auth.name")} name="name" value={form.name} onChange={updateField} placeholder={t("auth.namePlaceholder")} required />
+        <Input label={t("auth.lastName")} name="last_name" value={form.last_name} onChange={updateField} placeholder={t("auth.lastNamePlaceholder")} required />
         <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
-        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
-        <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="8" />
+        <Input label={t("auth.username")} name="username" type="text" value={form.username} onChange={updateField} placeholder={t("auth.username")} required />
+
+        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" />
+        <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" />
         <Button className="w-full" disabled={loading}>
           {loading ? (t("auth.creating") || "Creating account...") : (t("auth.register") || "Register")}
         </Button>

@@ -14,7 +14,7 @@ export default function Login() {
   const location = useLocation();
   const login = useAuthStore((state) => state.login);
   const loading = useAuthStore((state) => state.loading);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ login: "", password: "" });
   const [error, setError] = useState("");
   const [info, setInfo] = useState(localStorage.getItem("auth_flash_message") || "");
 
@@ -46,7 +46,7 @@ export default function Login() {
       <form onSubmit={submit} className="space-y-5">
         <Alert type="info">{info}</Alert>
         <Alert>{error}</Alert>
-        <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
+        <Input label={t("auth.email")} name="login" type="text" value={form.login} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
         <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required />
         <Button className="w-full" disabled={loading}>{loading ? t("auth.signingIn") : t("auth.login")}</Button>
       </form>

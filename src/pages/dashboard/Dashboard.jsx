@@ -55,7 +55,7 @@ export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const [glucoseLogs, setGlucoseLogs] = useState([]);
   const [medicalLogs, setMedicalLogs] = useState([]);
-  const [quickForm, setQuickForm] = useState({ glucose_amount: "", notes: "" });
+  const [quickForm, setQuickForm] = useState({ glucose_amount: "", note: "" });
   const [filterKey, setFilterKey] = useState("24h");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -120,15 +120,15 @@ export default function Dashboard() {
       type: "glucose",
       timestamp: log.logged_at || log.created_at,
       title: `${log.glucose_amount || log.amount} mg/dL`,
-      detail: log.notes || log.note || "",
+      detail: log.note || log.notes || "",
     }));
 
     const noteItems = medicalLogs.map((log) => ({
-      id: `m-${log.id || `${log.created_at}-${log.title}`}`,
+      id: `m-${log.id || `${log.created_at}-${log.type || "medical"}`}`,
       type: "note",
       timestamp: log.logged_at || log.created_at,
-      title: log.title || t("dashboard.medicalNote"),
-      detail: log.description || log.note || log.notes || t("dashboard.noDescription"),
+      title: log.type || t("dashboard.medicalNote"),
+      detail: log.note || t("dashboard.noDescription"),
     }));
 
     return [...glucoseItems, ...noteItems]
@@ -144,7 +144,7 @@ export default function Dashboard() {
 
     const glucoseValue = Number(quickForm.glucose_amount);
     const hasGlucose = Number.isFinite(glucoseValue) && glucoseValue > 0;
-    const hasNote = Boolean(quickForm.notes.trim());
+    const hasNote = Boolean(quickForm.note.trim());
 
     if (!hasGlucose && !hasNote) {
       setError("Enter a glucose value or a short note.");
@@ -160,7 +160,7 @@ export default function Dashboard() {
           createGlucoseLog({
             glucose_amount: glucoseValue,
             logged_at: new Date().toISOString(),
-            notes: hasNote ? quickForm.notes.trim() : "",
+            note: hasNote ? quickForm.note.trim() : "",
           }),
         );
       }
@@ -168,8 +168,9 @@ export default function Dashboard() {
       if (hasNote) {
         requests.push(
           createMedicalLog({
-            title: "Quick clinical note",
-            description: quickForm.notes.trim(),
+            amount: 0,
+            type: "quick-note",
+            note: quickForm.note.trim(),
             logged_at: new Date().toISOString(),
           }),
         );
@@ -177,7 +178,7 @@ export default function Dashboard() {
 
       await Promise.all(requests);
       await loadDashboard();
-      setQuickForm({ glucose_amount: "", notes: "" });
+      setQuickForm({ glucose_amount: "", note: "" });
       setSuccess("Saved successfully.");
     } catch {
       setError("Unable to save quick entry.");
@@ -321,17 +322,13 @@ export default function Dashboard() {
               onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
               className="text-lg"
             />
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Clinical note</span>
-              <textarea
-                name="notes"
-                rows="3"
-                placeholder={t("glucose.notesPlaceholder")}
-                value={quickForm.notes}
-                onChange={(event) => setQuickForm((state) => ({ ...state, notes: event.target.value }))}
-                className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-sky-400 dark:focus:ring-sky-900/50"
-              />
-            </label>
+            <Input
+              label={t("glucose.notes")}
+              name="note"
+              value={quickForm.note}
+              onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
+              placeholder={t("glucose.notesPlaceholder")}
+            />
             <button
               type="submit"
               disabled={saving}

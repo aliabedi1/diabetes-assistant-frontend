@@ -11,7 +11,7 @@ import { formatDate, unwrapCollection } from "../../utils/data";
 export default function GlucoseLogs() {
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
-  const [form, setForm] = useState({ glucose_amount: "", logged_at: new Date().toISOString().slice(0, 16), notes: "" });
+  const [form, setForm] = useState({ glucose_amount: "", logged_at: new Date().toISOString().slice(0, 16), note: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -46,7 +46,7 @@ export default function GlucoseLogs() {
         ...form,
         glucose_amount: Number(form.glucose_amount),
       });
-      setForm({ glucose_amount: "", logged_at: new Date().toISOString().slice(0, 16), notes: "" });
+      setForm({ glucose_amount: "", logged_at: new Date().toISOString().slice(0, 16), note: "" });
       setSuccess(t("glucose.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
@@ -66,7 +66,7 @@ export default function GlucoseLogs() {
           <Alert type="success">{success}</Alert>
           <Input label={t("glucose.glucoseAmount")} name="glucose_amount" type="number" value={form.glucose_amount} onChange={updateField} placeholder="120" required min="1" />
           <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
-          <Input label={t("glucose.notes")} name="notes" value={form.notes} onChange={updateField} placeholder={t("glucose.notesPlaceholder")} />
+          <Input label={t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("glucose.notesPlaceholder")} />
           <Button className="w-full" disabled={saving}>{saving ? t("glucose.saving") : t("glucose.saveReading")}</Button>
         </form>
       </Card>
@@ -87,7 +87,7 @@ export default function GlucoseLogs() {
                 <p className="text-2xl font-black text-slate-950 dark:text-white">{log.glucose_amount || log.amount} mg/dL</p>
                 <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{formatDate(log.logged_at || log.created_at)}</p>
               </div>
-              {(log.notes || log.note) && <p className="mt-3 text-slate-600 dark:text-slate-300">{log.notes || log.note}</p>}
+              {(log.note || log.notes) && <p className="mt-3 text-slate-600 dark:text-slate-300">{log.note || log.notes}</p>}
             </div>
           ))}
           {!loading && logs.length === 0 && <p className="rounded-3xl bg-slate-50 p-6 text-center text-slate-500 dark:bg-slate-700 dark:text-slate-400">{t("glucose.noLogs")}</p>}

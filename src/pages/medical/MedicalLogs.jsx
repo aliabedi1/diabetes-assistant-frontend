@@ -11,7 +11,7 @@ import { formatDate, unwrapCollection } from "../../utils/data";
 export default function MedicalLogs() {
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
-  const [form, setForm] = useState({ title: "", description: "", logged_at: new Date().toISOString().slice(0, 16) });
+  const [form, setForm] = useState({ amount: "", type: "", note: "", logged_at: new Date().toISOString().slice(0, 16) });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -42,8 +42,11 @@ export default function MedicalLogs() {
     setSuccess("");
 
     try {
-      await createMedicalLog(form);
-      setForm({ title: "", description: "", logged_at: new Date().toISOString().slice(0, 16) });
+      await createMedicalLog({
+        ...form,
+        amount: Number(form.amount),
+      });
+      setForm({ amount: "", type: "", note: "", logged_at: new Date().toISOString().slice(0, 16) });
       setSuccess(t("medical.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
@@ -61,20 +64,10 @@ export default function MedicalLogs() {
         <form onSubmit={submit} className="mt-6 space-y-5">
           <Alert>{error}</Alert>
           <Alert type="success">{success}</Alert>
-          <Input label={t("medical.title")} name="title" value={form.title} onChange={updateField} placeholder={t("medical.titlePlaceholder")} required />
+          <Input label={t("medical.amount") || "Amount"} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" />
+          <Input label={t("medical.type") || "Type"} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder") || "e.g., insulin"} />
           <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">{t("medical.description")}</span>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={updateField}
-              rows="5"
-              className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-sky-400 dark:focus:ring-sky-900/50"
-              placeholder={t("medical.descriptionPlaceholder")}
-              required
-            />
-          </label>
+          <Input label={t("medical.note") || t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder") || t("medical.descriptionPlaceholder")} />
           <Button className="w-full" disabled={saving}>{saving ? t("medical.saving") : t("medical.saveLog")}</Button>
         </form>
       </Card>
@@ -90,14 +83,14 @@ export default function MedicalLogs() {
         <div className="space-y-3">
           {loading && <p className="text-slate-500 dark:text-slate-400">{t("medical.loadingLogs")}</p>}
           {!loading && logs.map((log) => (
-            <div key={log.id || `${log.created_at}-${log.title}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-700">
+            <div key={log.id || `${log.created_at}-${log.type}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-700">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xl font-black text-slate-950 dark:text-white">{log.title || log.type || t("dashboard.medicalNote")}</p>
+                  <p className="text-xl font-black text-slate-950 dark:text-white">{log.type || t("dashboard.medicalNote")}</p>
                   <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">{formatDate(log.logged_at || log.created_at)}</p>
                 </div>
               </div>
-              <p className="mt-3 text-slate-600 dark:text-slate-300">{log.description || log.notes || log.note || t("dashboard.noDescription")}</p>
+              <p className="mt-3 text-slate-600 dark:text-slate-300">{log.note || t("dashboard.noDescription")}</p>
             </div>
           ))}
           {!loading && logs.length === 0 && <p className="rounded-3xl bg-slate-50 p-6 text-center text-slate-500 dark:bg-slate-700 dark:text-slate-400">{t("medical.noLogs")}</p>}
