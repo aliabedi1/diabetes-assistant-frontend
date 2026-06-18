@@ -44,3 +44,26 @@ Important project context and conventions for future work.
 ## Notes
 - `rg` is unavailable in this environment; use `grep`/`find` when searching.
 - Keep text labels resilient with fallbacks where missing translations may occur.
+
+## Global API Error Handling Rules (Mandatory)
+- Always read `MEMORY.md` before implementing any feature.
+- For `422 Validation Error` responses:
+  - Never show validation errors in global alerts/toasts/banners/summary blocks.
+  - Parse Laravel `errors` object and map messages to corresponding inputs.
+  - Render all messages under each related input (field may have multiple messages).
+  - Show error styling only on inputs with validation errors.
+- For `429` responses:
+  - Show user-friendly rate limit feedback using app design system.
+- For `401` and `403` responses:
+  - Show top-middle alert notification with theme-consistent styling.
+- For `500` responses:
+  - Page load failures => page-level error state.
+  - Form submissions => form-level error state.
+  - Modal actions => modal-level error state.
+  - Never fail silently.
+
+## Global Loading Rules (Mandatory)
+- On all index/list pages:
+  - While loading, show skeleton loaders only.
+  - Do not show empty state text/tables before loading completes.
+  - Replace skeletons with real content after successful response.

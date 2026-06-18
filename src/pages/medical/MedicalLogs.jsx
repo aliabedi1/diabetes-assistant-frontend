@@ -5,7 +5,7 @@ import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
 import { createMedicalLog, getMedicalLogs } from "../../services/medical.service";
-import { getApiError } from "../../utils/apiErrors";
+import { getFieldErrors, getStatusMessage } from "../../utils/apiErrors";
 import { formatDate, unwrapCollection } from "../../utils/data";
 
 export default function MedicalLogs() {
@@ -16,6 +16,7 @@ export default function MedicalLogs() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   async function loadLogs() {
     setLoading(true);
@@ -26,13 +27,15 @@ export default function MedicalLogs() {
 
   useEffect(() => {
     loadLogs().catch((requestError) => {
-      setError(getApiError(requestError, t("medical.errorLoading")));
+      setError(getStatusMessage(requestError, t("medical.errorLoading")));
       setLoading(false);
     });
   }, [t]);
 
   function updateField(event) {
-    setForm({ ...form, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
   }
 
   async function submit(event) {
@@ -40,6 +43,7 @@ export default function MedicalLogs() {
     setSaving(true);
     setError("");
     setSuccess("");
+    setFieldErrors({});
 
     try {
       await createMedicalLog({
@@ -50,7 +54,11 @@ export default function MedicalLogs() {
       setSuccess(t("medical.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
-      setError(getApiError(requestError, t("medical.errorSaving")));
+      if (requestError?.response?.status === 422) {
+        setFieldErrors(getFieldErrors(requestError));
+      } else {
+        setError(getStatusMessage(requestError, t("medical.errorSaving")));
+      }
     } finally {
       setSaving(false);
     }
@@ -64,10 +72,10 @@ export default function MedicalLogs() {
         <form onSubmit={submit} className="mt-6 space-y-5">
           <Alert>{error}</Alert>
           <Alert type="success">{success}</Alert>
-          <Input label={t("medical.amount") || "Amount"} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" />
-          <Input label={t("medical.type") || "Type"} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder") || "e.g., insulin"} />
-          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
-          <Input label={t("medical.note") || t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder") || t("medical.descriptionPlaceholder")} />
+          <Input label={t("medical.amount") || "Amount"} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" error={fieldErrors.amount} />
+          <Input label={t("medical.type") || "Type"} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder") || "e.g., insulin"} error={fieldErrors.type} />
+          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required error={fieldErrors.logged_at} />
+          <Input label={t("medical.note") || t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder") || t("medical.descriptionPlaceholder")} error={fieldErrors.note} />
           <Button className="w-full" disabled={saving}>{saving ? t("medical.saving") : t("medical.saveLog")}</Button>
         </form>
       </Card>
@@ -81,7 +89,13 @@ export default function MedicalLogs() {
           <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-bold text-violet-700 dark:bg-violet-900 dark:text-violet-300">{logs.length} {t("medical.logs")}</span>
         </div>
         <div className="space-y-3">
-          {loading && <p className="text-slate-500 dark:text-slate-400">{t("medical.loadingLogs")}</p>}
+          {loading && (
+            <>
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+            </>
+          )}
           {!loading && logs.map((log) => (
             <div key={log.id || `${log.created_at}-${log.type}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-700">
               <div className="flex flex-wrap items-start justify-between gap-3">

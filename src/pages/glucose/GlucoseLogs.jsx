@@ -5,7 +5,7 @@ import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
 import { createGlucoseLog, getGlucoseLogs } from "../../services/glucose.service";
-import { getApiError } from "../../utils/apiErrors";
+import { getFieldErrors, getStatusMessage } from "../../utils/apiErrors";
 import { formatDate, unwrapCollection } from "../../utils/data";
 
 export default function GlucoseLogs() {
@@ -16,6 +16,7 @@ export default function GlucoseLogs() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   async function loadLogs() {
     setLoading(true);
@@ -26,13 +27,15 @@ export default function GlucoseLogs() {
 
   useEffect(() => {
     loadLogs().catch((requestError) => {
-      setError(getApiError(requestError, t("glucose.errorLoading")));
+      setError(getStatusMessage(requestError, t("glucose.errorLoading")));
       setLoading(false);
     });
   }, [t]);
 
   function updateField(event) {
-    setForm({ ...form, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
   }
 
   async function submit(event) {
@@ -40,6 +43,7 @@ export default function GlucoseLogs() {
     setSaving(true);
     setError("");
     setSuccess("");
+    setFieldErrors({});
 
     try {
       await createGlucoseLog({
@@ -50,7 +54,11 @@ export default function GlucoseLogs() {
       setSuccess(t("glucose.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
-      setError(getApiError(requestError, t("glucose.errorSaving")));
+      if (requestError?.response?.status === 422) {
+        setFieldErrors(getFieldErrors(requestError));
+      } else {
+        setError(getStatusMessage(requestError, t("glucose.errorSaving")));
+      }
     } finally {
       setSaving(false);
     }
@@ -64,9 +72,9 @@ export default function GlucoseLogs() {
         <form onSubmit={submit} className="mt-6 space-y-5">
           <Alert>{error}</Alert>
           <Alert type="success">{success}</Alert>
-          <Input label={t("glucose.glucoseAmount")} name="glucose_amount" type="number" value={form.glucose_amount} onChange={updateField} placeholder="120" required min="1" />
-          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required />
-          <Input label={t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("glucose.notesPlaceholder")} />
+          <Input label={t("glucose.glucoseAmount")} name="glucose_amount" type="number" value={form.glucose_amount} onChange={updateField} placeholder="120" required min="1" error={fieldErrors.glucose_amount} />
+          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required error={fieldErrors.logged_at} />
+          <Input label={t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("glucose.notesPlaceholder")} error={fieldErrors.note} />
           <Button className="w-full" disabled={saving}>{saving ? t("glucose.saving") : t("glucose.saveReading")}</Button>
         </form>
       </Card>
@@ -80,7 +88,13 @@ export default function GlucoseLogs() {
           <span className="rounded-full bg-sky-100 px-3 py-1 text-sm font-bold text-sky-700 dark:bg-sky-900 dark:text-sky-300">{logs.length} {t("glucose.logs")}</span>
         </div>
         <div className="space-y-3">
-          {loading && <p className="text-slate-500 dark:text-slate-400">{t("glucose.loadingLogs")}</p>}
+          {loading && (
+            <>
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+              <div className="h-24 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-700/60" />
+            </>
+          )}
           {!loading && logs.map((log) => (
             <div key={log.id || `${log.logged_at}-${log.glucose_amount}`} className="rounded-3xl border border-slate-100 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-700">
               <div className="flex flex-wrap items-center justify-between gap-3">

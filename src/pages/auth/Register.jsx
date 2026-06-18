@@ -6,7 +6,7 @@ import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import AuthLayout from "../../layouts/AuthLayout";
 import { useAuthStore } from "../../store/auth.store";
-import { getApiError } from "../../utils/apiErrors";
+import { getFieldErrors, getStatusMessage } from "../../utils/apiErrors";
 
 export default function Register() {
   const { t } = useTranslation();
@@ -15,20 +15,31 @@ export default function Register() {
   const loading = useAuthStore((state) => state.loading);
   const [form, setForm] = useState({ username: "", name: "", last_name: "", email: "", password: "", password_confirmation: "" });
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   function updateField(event) {
-    setForm({ ...form, [event.target.name]: event.target.value });
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: undefined }));
   }
 
   async function submit(event) {
     event.preventDefault();
     setError("");
+    setFieldErrors({});
 
     try {
       await register(form);
       navigate("/dashboard");
     } catch (requestError) {
-      setError(getApiError(requestError, "Unable to create your account."));
+      const status = requestError?.response?.status;
+
+      if (status === 422) {
+        setFieldErrors(getFieldErrors(requestError));
+        return;
+      }
+
+      setError(getStatusMessage(requestError, "Unable to create your account."));
     }
   }
 
@@ -36,13 +47,12 @@ export default function Register() {
     <AuthLayout title={t("auth.createAccount")} subtitle={t("auth.registerSubtitle")}>
       <form onSubmit={submit} className="space-y-5">
         <Alert>{error}</Alert>
-        <Input label={t("auth.name")} name="name" value={form.name} onChange={updateField} placeholder={t("auth.namePlaceholder")} required />
-        <Input label={t("auth.lastName")} name="last_name" value={form.last_name} onChange={updateField} placeholder={t("auth.lastNamePlaceholder")} required />
-        <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required />
-        <Input label={t("auth.username")} name="username" type="text" value={form.username} onChange={updateField} placeholder={t("auth.username")} required />
-
-        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" />
-        <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" />
+        <Input label={t("auth.name")} name="name" value={form.name} onChange={updateField} placeholder={t("auth.namePlaceholder")} required error={fieldErrors.name} />
+        <Input label={t("auth.lastName")} name="last_name" value={form.last_name} onChange={updateField} placeholder={t("auth.lastNamePlaceholder")} required error={fieldErrors.last_name} />
+        <Input label={t("auth.email")} name="email" type="email" value={form.email} onChange={updateField} placeholder={t("auth.emailPlaceholder")} required error={fieldErrors.email} />
+        <Input label={t("auth.username")} name="username" type="text" value={form.username} onChange={updateField} placeholder={t("auth.username")} required error={fieldErrors.username} />
+        <Input label={t("auth.password")} name="password" type="password" value={form.password} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" error={fieldErrors.password} />
+        <Input label={t("auth.confirmPassword")} name="password_confirmation" type="password" value={form.password_confirmation} onChange={updateField} placeholder={t("auth.passwordPlaceholder")} required minLength="6" error={fieldErrors.password_confirmation} />
         <Button className="w-full" disabled={loading}>
           {loading ? (t("auth.creating") || "Creating account...") : (t("auth.register") || "Register")}
         </Button>
