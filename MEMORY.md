@@ -67,3 +67,16 @@ Important project context and conventions for future work.
   - While loading, show skeleton loaders only.
   - Do not show empty state text/tables before loading completes.
   - Replace skeletons with real content after successful response.
+
+## Persian Localization & RTL Rules (Mandatory)
+- Persian localization must be complete on all pages/components.
+- No hardcoded English visible text is allowed when language is Persian.
+- Localize all card titles, section titles, labels, placeholders, buttons, tooltips, validation messages, helper texts, and dynamic status messages.
+- Use consistent Persian terminology for repeated concepts across the app.
+- Use professional, natural Persian wording (not literal machine translation).
+- For every new page/component:
+  - Add localization keys for all visible texts.
+  - Add Persian translations.
+  - Verify RTL compatibility (direction, alignment, spacing, icon positioning, and input layouts).
+  - Verify form labels/placeholders/error states render correctly in Persian.
+
