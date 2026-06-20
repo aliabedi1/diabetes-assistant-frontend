@@ -72,10 +72,10 @@ export default function MedicalLogs() {
         <form onSubmit={submit} className="mt-6 space-y-5">
           <Alert>{error}</Alert>
           <Alert type="success">{success}</Alert>
-          <Input label={t("medical.amount") || "Amount"} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" error={fieldErrors.amount} />
-          <Input label={t("medical.type") || "Type"} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder") || "e.g., insulin"} error={fieldErrors.type} />
+          <Input label={t("medical.amount")} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" error={fieldErrors.amount} />
+          <Input label={t("medical.type")} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder")} error={fieldErrors.type} />
           <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required error={fieldErrors.logged_at} />
-          <Input label={t("medical.note") || t("glucose.notes")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder") || t("medical.descriptionPlaceholder")} error={fieldErrors.note} />
+          <Input label={t("medical.note")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder")} error={fieldErrors.note} />
           <Button className="w-full" disabled={saving}>{saving ? t("medical.saving") : t("medical.saveLog")}</Button>
         </form>
       </Card>

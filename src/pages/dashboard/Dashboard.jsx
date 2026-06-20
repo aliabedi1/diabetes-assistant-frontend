@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
+import DateTimeField from "../../components/ui/DateTimeField";
 import Alert from "../../components/ui/Alert";
 import { createGlucoseLog, getGlucoseLogs } from "../../services/glucose.service";
 import { createMedicalLog, getMedicalLogs } from "../../services/medical.service";
@@ -15,24 +16,24 @@ const FILTER_OPTIONS = [
   { key: "7d", hours: 24 * 7 },
 ];
 
-function getStatusFromAverage(value) {
+function getStatusFromAverage(value, t) {
   if (!value || Number.isNaN(value)) {
-    return { label: "No Data", color: "slate", rating: "—" };
+    return { label: t("dashboard.statusNoData"), color: "slate", rating: "—" };
   }
 
   if (value < 80) {
-    return { label: "Low Trend", color: "amber", rating: "C" };
+    return { label: t("dashboard.statusLowTrend"), color: "amber", rating: "C" };
   }
 
   if (value <= 140) {
-    return { label: "In Range", color: "emerald", rating: "A" };
+    return { label: t("dashboard.statusInRange"), color: "emerald", rating: "A" };
   }
 
   if (value <= 180) {
-    return { label: "Elevated", color: "orange", rating: "B" };
+    return { label: t("dashboard.statusElevated"), color: "orange", rating: "B" };
   }
 
-  return { label: "High Risk", color: "rose", rating: "D" };
+  return { label: t("dashboard.statusHighRisk"), color: "rose", rating: "D" };
 }
 
 function getChartPath(points, width, height, minY, maxY) {
@@ -55,7 +56,7 @@ export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const [glucoseLogs, setGlucoseLogs] = useState([]);
   const [medicalLogs, setMedicalLogs] = useState([]);
-  const [quickForm, setQuickForm] = useState({ glucose_amount: "", note: "" });
+  const [quickForm, setQuickForm] = useState({ glucose_amount: "", note: "", logged_at: "" });
   const [filterKey, setFilterKey] = useState("24h");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -77,7 +78,7 @@ export default function Dashboard() {
     loadDashboard()
       .catch(() => setError(t("common.error")))
       .finally(() => setLoading(false));
-  }, []);
+  }, [t]);
 
   const latestGlucose = glucoseLogs[0];
   const recentSevenDays = useMemo(() => {
@@ -89,7 +90,7 @@ export default function Dashboard() {
     ? Math.round(recentSevenDays.reduce((total, log) => total + Number(log.glucose_amount || log.amount || 0), 0) / recentSevenDays.length)
     : null;
 
-  const healthStatus = getStatusFromAverage(averageGlucose);
+  const healthStatus = getStatusFromAverage(averageGlucose, t);
 
   const filteredChartLogs = useMemo(() => {
     const option = FILTER_OPTIONS.find((item) => item.key === filterKey) || FILTER_OPTIONS[2];
@@ -145,9 +146,10 @@ export default function Dashboard() {
     const glucoseValue = Number(quickForm.glucose_amount);
     const hasGlucose = Number.isFinite(glucoseValue) && glucoseValue > 0;
     const hasNote = Boolean(quickForm.note.trim());
+    const hasLoggedAt = Boolean(quickForm.logged_at);
 
     if (!hasGlucose && !hasNote) {
-      setError("Enter a glucose value or a short note.");
+      setError(t("dashboard.quickEntryValidation"));
       setSaving(false);
       return;
     }
@@ -159,7 +161,7 @@ export default function Dashboard() {
         requests.push(
           createGlucoseLog({
             glucose_amount: glucoseValue,
-            logged_at: new Date().toISOString(),
+            ...(hasLoggedAt ? { logged_at: quickForm.logged_at } : {}),
             note: hasNote ? quickForm.note.trim() : "",
           }),
         );
@@ -171,17 +173,17 @@ export default function Dashboard() {
             amount: 0,
             type: "quick-note",
             note: quickForm.note.trim(),
-            logged_at: new Date().toISOString(),
+            ...(hasLoggedAt ? { logged_at: quickForm.logged_at } : {}),
           }),
         );
       }
 
       await Promise.all(requests);
       await loadDashboard();
-      setQuickForm({ glucose_amount: "", note: "" });
-      setSuccess("Saved successfully.");
+      setQuickForm({ glucose_amount: "", note: "", logged_at: "" });
+      setSuccess(t("dashboard.quickEntrySaved"));
     } catch {
-      setError("Unable to save quick entry.");
+      setError(t("dashboard.quickEntrySaveError"));
     } finally {
       setSaving(false);
     }
@@ -213,7 +215,7 @@ export default function Dashboard() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{t("dashboard.overview")}</p>
-                <h2 className="text-2xl font-black text-slate-950 dark:text-white">Glucose Trend</h2>
+                <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("dashboard.glucoseTrend")}</h2>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {FILTER_OPTIONS.map((option) => (
@@ -237,7 +239,7 @@ export default function Dashboard() {
           <div className="p-4 sm:p-6">
             <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Latest Reading</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.latestReading")}</p>
                 <p className="text-3xl font-black text-slate-950 dark:text-white">{latestGlucose ? `${latestGlucose.glucose_amount || latestGlucose.amount} mg/dL` : "—"}</p>
               </div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -245,7 +247,7 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/60">
-              <svg viewBox="0 0 100 46" className="h-40 w-full sm:h-52" role="img" aria-label="Glucose chart">
+              <svg viewBox="0 0 100 46" className="h-40 w-full sm:h-52" role="img" aria-label={t("dashboard.glucoseTrend")}>
                 <rect x="0" y="0" width="100" height="46" fill="transparent" />
                 <line x1="0" y1="33" x2="100" y2="33" stroke="currentColor" className="text-emerald-300/50 dark:text-emerald-500/40" strokeWidth="0.5" />
                 <path d={chartPath} fill="none" stroke="currentColor" className="text-sky-600 dark:text-sky-400" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
@@ -266,7 +268,7 @@ export default function Dashboard() {
                 })}
               </svg>
               <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                Target range highlighted at ~80–140 mg/dL. {chartPoints.length} points shown.
+                {t("dashboard.targetRangeHint")} {chartPoints.length} {t("dashboard.pointsShown")}.
               </p>
             </div>
           </div>
@@ -274,9 +276,9 @@ export default function Dashboard() {
 
         <Card>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-xl font-black text-slate-950 dark:text-white">Contextual History</h3>
+            <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.contextualHistory")}</h3>
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-              {mergedHistory.length} recent
+              {mergedHistory.length} {t("dashboard.recentCount")}
             </span>
           </div>
           <div className="space-y-3">
@@ -292,7 +294,7 @@ export default function Dashboard() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold text-slate-950 dark:text-white">{item.title}</p>
                   <span className={`rounded-full px-2 py-1 text-xs font-semibold ${item.type === "glucose" ? "bg-sky-100 text-sky-700 dark:bg-sky-900/60 dark:text-sky-300" : "bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-300"}`}>
-                    {item.type}
+                    {item.type === "glucose" ? t("home.glucose") : t("dashboard.medicalNote")}
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{formatDate(item.timestamp)}</p>
@@ -306,8 +308,8 @@ export default function Dashboard() {
 
       <div className="space-y-6">
         <Card id="quick-add-panel" className="xl:sticky xl:top-24">
-          <h3 className="text-xl font-black text-slate-950 dark:text-white">Quick Add</h3>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Fast logging with minimal fields.</p>
+          <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.quickAdd")}</h3>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("dashboard.quickAddSubtitle")}</p>
           <form onSubmit={submitQuickAdd} className="mt-5 space-y-4">
             <Alert>{error}</Alert>
             <Alert type="success">{success}</Alert>
@@ -322,6 +324,12 @@ export default function Dashboard() {
               onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
               className="text-lg"
             />
+            <DateTimeField
+              label={t("common.loggedAt") || t("glucose.loggedAt")}
+              value={quickForm.logged_at}
+              onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
+              placeholder={t("common.loggedAtPlaceholder") || "Select date and time"}
+            />
             <Input
               label={t("glucose.notes")}
               name="note"
@@ -334,17 +342,17 @@ export default function Dashboard() {
               disabled={saving}
               className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition duration-200 active:scale-[0.99] hover:bg-sky-700 disabled:opacity-60 dark:bg-sky-500 dark:hover:bg-sky-400"
             >
-              {saving ? t("common.loading") : "Save Quick Log"}
+              {saving ? t("common.loading") : t("dashboard.saveQuickLog")}
             </button>
           </form>
         </Card>
 
         <Card>
-          <h3 className="text-xl font-black text-slate-950 dark:text-white">Health Snapshot</h3>
+          <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.healthSnapshot")}</h3>
           <div className="mt-4 grid gap-3">
             <div className="flex items-center justify-between rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/60">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">7-day Avg</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.sevenDayAvg")}</p>
                 <p className="text-2xl font-black text-slate-950 dark:text-white">{averageGlucose ? `${averageGlucose} mg/dL` : "—"}</p>
               </div>
               <span className={`rounded-full px-3 py-1 text-sm font-bold ${statusColors[healthStatus.color]}`}>
@@ -353,15 +361,15 @@ export default function Dashboard() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-700/60">
-                <p className="text-xs text-slate-500 dark:text-slate-400">Rating</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{t("dashboard.rating")}</p>
                 <p className="text-xl font-black text-slate-900 dark:text-slate-100">{healthStatus.rating}</p>
               </div>
               <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-700/60">
-                <p className="text-xs text-slate-500 dark:text-slate-400">Highs</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{t("dashboard.highs")}</p>
                 <p className="text-xl font-black text-slate-900 dark:text-slate-100">{recentSevenDays.filter((log) => Number(log.glucose_amount || log.amount || 0) > 180).length}</p>
               </div>
               <div className="rounded-xl bg-slate-50 p-3 text-center dark:bg-slate-700/60">
-                <p className="text-xs text-slate-500 dark:text-slate-400">Lows</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{t("dashboard.lows")}</p>
                 <p className="text-xl font-black text-slate-900 dark:text-slate-100">{recentSevenDays.filter((log) => Number(log.glucose_amount || log.amount || 0) < 80).length}</p>
               </div>
             </div>
@@ -369,16 +377,16 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <h3 className="text-xl font-black text-slate-950 dark:text-white">Profile</h3>
+          <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.profile")}</h3>
           <div className="mt-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/60">
-            <p className="text-sm text-slate-500 dark:text-slate-400">Signed in as</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.signedInAs")}</p>
             <p className="text-lg font-bold text-slate-950 dark:text-white">{user?.name || "Patient"}</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email || "No email available"}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email || t("dashboard.noEmailAvailable")}</p>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-900/60 dark:text-sky-300">Units: mg/dL</span>
-            <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-900/60 dark:text-violet-300">Mobile-ready</span>
-            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300">Fast entry mode</span>
+            <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700 dark:bg-sky-900/60 dark:text-sky-300">{t("dashboard.units")}</span>
+            <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-900/60 dark:text-violet-300">{t("dashboard.mobileReady")}</span>
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300">{t("dashboard.fastEntryMode")}</span>
           </div>
         </Card>
       </div>
@@ -386,7 +394,7 @@ export default function Dashboard() {
         href="#quick-add-panel"
         className={`fixed bottom-4 right-4 z-30 rounded-full bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-600/30 transition lg:hidden ${showMobileQuickAdd ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"}`}
       >
-        + Quick Add
+        {t("dashboard.quickAddFab")}
       </a>
     </div>
   );

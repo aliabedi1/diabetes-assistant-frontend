@@ -12,12 +12,12 @@ export default function DashboardLayout() {
   const user = useAuthStore((state) => state.user);
 
   const primaryLinks = [
-    { to: "/dashboard", label: "Quick-View" },
-    { to: "/journal", label: "Daily Journal" },
+    { to: "/dashboard", label: t("nav.quickView") },
+    { to: "/journal", label: t("nav.dailyJournal") },
   ];
 
   const archiveLinks = [
-    { to: "/archive", label: "Master Archive" },
+    { to: "/archive", label: t("nav.masterArchive") },
     { to: "/glucose", label: t("nav.glucoseLogs") },
     { to: "/medical", label: t("nav.medicalLogs") },
   ];
@@ -39,7 +39,7 @@ export default function DashboardLayout() {
         </div>
         <nav className="mt-10 space-y-6">
           <div>
-            <p className="mb-2 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Quick Access</p>
+            <p className="mb-2 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{t("nav.quickAccess")}</p>
             <div className="space-y-2">
               {primaryLinks.map((link) => (
                 <NavLink
@@ -57,7 +57,7 @@ export default function DashboardLayout() {
             </div>
           </div>
           <div>
-            <p className="mb-2 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Archive / Data</p>
+            <p className="mb-2 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{t("nav.archiveData")}</p>
             <div className="space-y-1 rounded-2xl border border-slate-200 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-800/70">
               {archiveLinks.map((link) => (
                 <NavLink

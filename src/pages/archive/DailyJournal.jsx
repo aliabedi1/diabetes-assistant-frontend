@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Alert from "../../components/ui/Alert";
 import Card from "../../components/ui/Card";
 import { getGlucoseLogs } from "../../services/glucose.service";
 import { getMedicalLogs } from "../../services/medical.service";
 import { formatDate, unwrapCollection } from "../../utils/data";
-import { useEffect } from "react";
+import { getStatusMessage } from "../../utils/apiErrors";
 
 function toInputDate(dateValue) {
   const date = new Date(dateValue);
@@ -23,11 +24,12 @@ function isSameDay(left, right) {
 }
 
 export default function DailyJournal() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [glucoseLogs, setGlucoseLogs] = useState([]);
   const [medicalLogs, setMedicalLogs] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadEntries() {
@@ -40,8 +42,10 @@ export default function DailyJournal() {
       setMedicalLogs(unwrapCollection(medicalResponse.data));
     }
 
-    loadEntries().finally(() => setLoading(false));
-  }, []);
+    loadEntries()
+      .catch((requestError) => setError(getStatusMessage(requestError, t("journal.errorLoading"))))
+      .finally(() => setLoading(false));
+  }, [t]);
 
   const dayEntries = useMemo(() => {
     const glucoseItems = glucoseLogs.map((log) => ({
@@ -73,26 +77,32 @@ export default function DailyJournal() {
     });
   }
 
+  const timeLocale = i18n.language === "fa" ? "fa-IR" : "en";
+
   return (
     <div className="space-y-6">
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-black text-slate-950 dark:text-white">Daily Journal</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Timeline view by day</p>
+            <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t("journal.title")}</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{t("journal.subtitle")}</p>
           </div>
           <div className="grid w-full grid-cols-1 gap-2 sm:flex sm:w-auto sm:items-center">
             <button type="button" onClick={() => shiftDay(-1)} className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
-              Previous Day
+              {t("journal.previousDay")}
             </button>
             <input
               type="date"
               value={toInputDate(selectedDate)}
-              onChange={(event) => setSelectedDate(new Date(event.target.value))}
+              onChange={(event) => {
+                const [year, month, day] = event.target.value.split("-").map(Number);
+                const localDate = new Date(year, month - 1, day);
+                setSelectedDate(localDate);
+              }}
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:border-sky-500 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-100 sm:w-auto"
             />
             <button type="button" onClick={() => shiftDay(1)} className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600">
-              Next Day
+              {t("journal.nextDay")}
             </button>
           </div>
         </div>
@@ -100,11 +110,12 @@ export default function DailyJournal() {
 
       <Card>
         <div className="mb-5 flex items-center justify-between">
-          <h3 className="text-xl font-black text-slate-950 dark:text-white">Timeline</h3>
+          <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("journal.timeline")}</h3>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-300">
-            {dayEntries.length} items
+            {dayEntries.length} {t("journal.items")}
           </span>
         </div>
+        <Alert>{error}</Alert>
         {loading && (
           <div className="space-y-3">
             <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60" />
@@ -112,23 +123,21 @@ export default function DailyJournal() {
             <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-700/60" />
           </div>
         )}
-        {!loading && dayEntries.length === 0 && <p className="text-slate-500 dark:text-slate-400">No entries for this day.</p>}
+        {!loading && dayEntries.length === 0 && !error && (
+          <p className="text-slate-500 dark:text-slate-400">{t("journal.noEntries")}</p>
+        )}
         <div className="space-y-3">
-          {dayEntries.map((entry) => (
+          {!loading && dayEntries.map((entry) => (
             <div key={entry.id} className="group relative rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-700/60 dark:hover:border-slate-500">
               <div className="absolute start-2 top-0 h-full w-px bg-slate-200 dark:bg-slate-600" />
               <div className="relative ms-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                      {new Intl.DateTimeFormat("en", { hour: "2-digit", minute: "2-digit" }).format(entry.time)}
+                      {new Intl.DateTimeFormat(timeLocale, { hour: "2-digit", minute: "2-digit" }).format(entry.time)}
                     </p>
                     <p className="text-base font-bold text-slate-950 dark:text-white">{entry.title}</p>
                     {entry.detail && <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{entry.detail}</p>}
-                  </div>
-                  <div className="flex gap-1 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-                    <button type="button" className="rounded-lg bg-white px-2 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-600">Edit</button>
-                    <button type="button" className="rounded-lg bg-white px-2 py-1 text-xs font-semibold text-rose-600 ring-1 ring-rose-200 hover:bg-rose-50 dark:bg-slate-800 dark:text-rose-300 dark:ring-rose-800">Delete</button>
                   </div>
                 </div>
                 <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{formatDate(entry.time)}</p>

@@ -1,3 +1,5 @@
+import i18n from "../i18n";
+
 export function unwrapCollection(payload) {
   const value = payload?.data ?? payload;
 
@@ -14,10 +16,12 @@ export function unwrapCollection(payload) {
 
 export function formatDate(value) {
   if (!value) {
-    return "Not set";
+    return i18n.t("common.notSet");
   }
 
-  return new Intl.DateTimeFormat("en", {
+  const locale = i18n.language === "fa" ? "fa-IR-u-ca-persian" : "en";
+
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
