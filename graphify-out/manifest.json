@@ -1,0 +1,257 @@
+{
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/eslint.config.js": {
+    "mtime": 1779728683.769569,
+    "ast_hash": "3aa4b57d7f08181d86bde52a4dcb7f22",
+    "semantic_hash": "3aa4b57d7f08181d86bde52a4dcb7f22"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/package.json": {
+    "mtime": 1781806228.554309,
+    "ast_hash": "f59d07dacd505e1c9220b249e147ce59",
+    "semantic_hash": "f59d07dacd505e1c9220b249e147ce59"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/api/auth.js": {
+    "mtime": 1779728683.7708292,
+    "ast_hash": "e37ef255cb13a745922cd8f6062464b3",
+    "semantic_hash": "e37ef255cb13a745922cd8f6062464b3"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/api/axios.js": {
+    "mtime": 1779728683.7708664,
+    "ast_hash": "6da74abde42e526f5c2ab7c98e2bfd6e",
+    "semantic_hash": "6da74abde42e526f5c2ab7c98e2bfd6e"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/api/glucose.js": {
+    "mtime": 1779728683.7708664,
+    "ast_hash": "5d12e836089e5a89b5a396863c2c0e4c",
+    "semantic_hash": "5d12e836089e5a89b5a396863c2c0e4c"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/api/medical.js": {
+    "mtime": 1779728683.7708664,
+    "ast_hash": "a2f6165d342756db29afbe75c32daee4",
+    "semantic_hash": "a2f6165d342756db29afbe75c32daee4"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/app/App.jsx": {
+    "mtime": 1779728683.7708664,
+    "ast_hash": "4d895b155701ef85236c58371bc957b2",
+    "semantic_hash": "4d895b155701ef85236c58371bc957b2"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/app/providers.jsx": {
+    "mtime": 1779728683.7708664,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/LanguageToggle.jsx": {
+    "mtime": 1780788990.5060732,
+    "ast_hash": "3c9166a6ee1a25053eba5e8432a35514",
+    "semantic_hash": "3c9166a6ee1a25053eba5e8432a35514"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ThemeToggle.jsx": {
+    "mtime": 1780788996.5420773,
+    "ast_hash": "32f6262805d0f03577648111e740f6f6",
+    "semantic_hash": "32f6262805d0f03577648111e740f6f6"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/Alert.jsx": {
+    "mtime": 1780768885.2716043,
+    "ast_hash": "15a6ea2928aabba632c3dd46ab4c1d3c",
+    "semantic_hash": "15a6ea2928aabba632c3dd46ab4c1d3c"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/Button.jsx": {
+    "mtime": 1780792646.4137454,
+    "ast_hash": "1ccfaec66cc84bde814976960ba799ee",
+    "semantic_hash": "1ccfaec66cc84bde814976960ba799ee"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/Card.jsx": {
+    "mtime": 1780768829.6855996,
+    "ast_hash": "fb61525f29b326abcc0ec15f81f7be00",
+    "semantic_hash": "fb61525f29b326abcc0ec15f81f7be00"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/DateTimeField.jsx": {
+    "mtime": 1781806252.9063017,
+    "ast_hash": "9807b4db2c7d90f4ab60e4d2e07a8578",
+    "semantic_hash": "9807b4db2c7d90f4ab60e4d2e07a8578"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/Input.jsx": {
+    "mtime": 1781797123.2694225,
+    "ast_hash": "387c2a8c05f18b877457bd5f4a99ad29",
+    "semantic_hash": "387c2a8c05f18b877457bd5f4a99ad29"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/components/ui/StatCard.jsx": {
+    "mtime": 1780768858.2201934,
+    "ast_hash": "011def5d6d9f5741aeb7ebccb75e0f2c",
+    "semantic_hash": "011def5d6d9f5741aeb7ebccb75e0f2c"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/hooks/useAuth.js": {
+    "mtime": 1779728683.7712476,
+    "ast_hash": "d1ff5d50696b64b248a126793185cc06",
+    "semantic_hash": "d1ff5d50696b64b248a126793185cc06"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/i18n/en.json": {
+    "mtime": 1781806336.5534742,
+    "ast_hash": "885470360ebe40481c1efcc9105546ad",
+    "semantic_hash": "885470360ebe40481c1efcc9105546ad"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/i18n/fa.json": {
+    "mtime": 1781806336.5824907,
+    "ast_hash": "223cdca11589a1760fb4441fb29b4f5b",
+    "semantic_hash": "223cdca11589a1760fb4441fb29b4f5b"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/i18n/index.js": {
+    "mtime": 1780788983.7440689,
+    "ast_hash": "a2fb5f7e292565f7fd0b844d426b0eee",
+    "semantic_hash": "a2fb5f7e292565f7fd0b844d426b0eee"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/layouts/AuthLayout.jsx": {
+    "mtime": 1780792482.5821238,
+    "ast_hash": "fc915cd6f805fa106e8b13d74110ef11",
+    "semantic_hash": "fc915cd6f805fa106e8b13d74110ef11"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/layouts/DashboardLayout.jsx": {
+    "mtime": 1780792470.2982562,
+    "ast_hash": "74121161c87e0e160a9f3ffb55571fd4",
+    "semantic_hash": "74121161c87e0e160a9f3ffb55571fd4"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/main.jsx": {
+    "mtime": 1780768610.652416,
+    "ast_hash": "3b8b7b836f9602a4e4f5bba248b56b57",
+    "semantic_hash": "3b8b7b836f9602a4e4f5bba248b56b57"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/Home.jsx": {
+    "mtime": 1780792496.7070174,
+    "ast_hash": "37b73a35b746e1b164cce92a97aaba5e",
+    "semantic_hash": "37b73a35b746e1b164cce92a97aaba5e"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/archive/DailyJournal.jsx": {
+    "mtime": 1781050258.6775212,
+    "ast_hash": "109f9f7e94d9f1ee44554ebef1962d22",
+    "semantic_hash": "109f9f7e94d9f1ee44554ebef1962d22"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/archive/MasterArchive.jsx": {
+    "mtime": 1780792679.0692728,
+    "ast_hash": "9e3202c7dd8e128b30d2082e10a9649c",
+    "semantic_hash": "9e3202c7dd8e128b30d2082e10a9649c"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/auth/Login.jsx": {
+    "mtime": 1781797149.4702282,
+    "ast_hash": "105ce52346b1527595ecb9071240af60",
+    "semantic_hash": "105ce52346b1527595ecb9071240af60"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/auth/Register.jsx": {
+    "mtime": 1781797172.7070558,
+    "ast_hash": "3102439632d4b22397b16c4dd78d3d0e",
+    "semantic_hash": "3102439632d4b22397b16c4dd78d3d0e"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/dashboard/Dashboard.jsx": {
+    "mtime": 1781968620.377899,
+    "ast_hash": "582731a86a01bf2e008eb771f1d46d86",
+    "semantic_hash": "582731a86a01bf2e008eb771f1d46d86"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/glucose/GlucoseLogs.jsx": {
+    "mtime": 1781797920.4745219,
+    "ast_hash": "b625af693764cec380f233b749675c68",
+    "semantic_hash": "b625af693764cec380f233b749675c68"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/medical/MedicalLogs.jsx": {
+    "mtime": 1781798094.5572348,
+    "ast_hash": "657349a3b5edfa2cc8865a50a82ec8d1",
+    "semantic_hash": "657349a3b5edfa2cc8865a50a82ec8d1"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/pages/notfound/NotFound.jsx": {
+    "mtime": 1780768914.9519062,
+    "ast_hash": "1d22bfed28e0edb1225909c6bd222d22",
+    "semantic_hash": "1d22bfed28e0edb1225909c6bd222d22"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/routes/ProtectedRoutes.jsx": {
+    "mtime": 1779728683.7717717,
+    "ast_hash": "95319990705b2b8de1db45850c381d07",
+    "semantic_hash": "95319990705b2b8de1db45850c381d07"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/routes/index.jsx": {
+    "mtime": 1780791770.8918188,
+    "ast_hash": "b25515958fd6d8f6454937b0fe4e0546",
+    "semantic_hash": "b25515958fd6d8f6454937b0fe4e0546"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/services/api.js": {
+    "mtime": 1780792216.173056,
+    "ast_hash": "e1512e94a9c8334078bef2846df269e2",
+    "semantic_hash": "e1512e94a9c8334078bef2846df269e2"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/services/auth.service.js": {
+    "mtime": 1779728683.7721734,
+    "ast_hash": "9b4750e73ad8f8f5e09a718b909a4030",
+    "semantic_hash": "9b4750e73ad8f8f5e09a718b909a4030"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/services/glucose.service.js": {
+    "mtime": 1779728683.7721734,
+    "ast_hash": "d8a9be31b03aeb5e67389a89867fac11",
+    "semantic_hash": "d8a9be31b03aeb5e67389a89867fac11"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/services/medical.service.js": {
+    "mtime": 1779728683.7721734,
+    "ast_hash": "cb59f357ba3e3df66b3d6ed9a263ef0f",
+    "semantic_hash": "cb59f357ba3e3df66b3d6ed9a263ef0f"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/store/auth.store.js": {
+    "mtime": 1779728683.7721734,
+    "ast_hash": "e7c0b105bfa7d19946c66d2c7d49e8ef",
+    "semantic_hash": "e7c0b105bfa7d19946c66d2c7d49e8ef"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/store/theme.store.js": {
+    "mtime": 1780768526.0931857,
+    "ast_hash": "736f56fad53bb3fc48fbcd6a7d8c70ed",
+    "semantic_hash": "736f56fad53bb3fc48fbcd6a7d8c70ed"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/utils/apiErrors.js": {
+    "mtime": 1781797057.0649145,
+    "ast_hash": "1ba98f0e5074fbbd1e41cf19175e3b5a",
+    "semantic_hash": "1ba98f0e5074fbbd1e41cf19175e3b5a"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/utils/data.js": {
+    "mtime": 1779728683.7723613,
+    "ast_hash": "673af515deca949f98afbfaf3bcef0fa",
+    "semantic_hash": "673af515deca949f98afbfaf3bcef0fa"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/vite.config.js": {
+    "mtime": 1779728683.7723613,
+    "ast_hash": "f955ee4eeae138a29188424d174b28b7",
+    "semantic_hash": "f955ee4eeae138a29188424d174b28b7"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/MEMORY.md": {
+    "mtime": 1781968778.033936,
+    "ast_hash": "76b14e23f0d7253a41fe49c5e823fc6d",
+    "semantic_hash": "76b14e23f0d7253a41fe49c5e823fc6d"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/README.md": {
+    "mtime": 1780791032.4594343,
+    "ast_hash": "640e71304276094400be789223d93c05",
+    "semantic_hash": "640e71304276094400be789223d93c05"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/index.html": {
+    "mtime": 1779728683.769569,
+    "ast_hash": "5da5e2bc8ecdedbaf80ee21d054f6072",
+    "semantic_hash": "5da5e2bc8ecdedbaf80ee21d054f6072"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/public/favicon.svg": {
+    "mtime": 1779728683.769569,
+    "ast_hash": "7e840862161341271697daa99a40d76b",
+    "semantic_hash": "7e840862161341271697daa99a40d76b"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/public/icons.svg": {
+    "mtime": 1779728683.7699137,
+    "ast_hash": "3b4fcfcf393eca4d264dca4a4663bc37",
+    "semantic_hash": "3b4fcfcf393eca4d264dca4a4663bc37"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/assets/hero.png": {
+    "mtime": 1779728683.7709708,
+    "ast_hash": "aead493361b27e7510691c5d7072dfc1",
+    "semantic_hash": "aead493361b27e7510691c5d7072dfc1"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/assets/react.svg": {
+    "mtime": 1779728683.7710435,
+    "ast_hash": "f0402b67b6ce880f65666bb49e841696",
+    "semantic_hash": "f0402b67b6ce880f65666bb49e841696"
+  },
+  "/home/ali/Desktop/projects/diabetes-assistant-frontend/src/assets/vite.svg": {
+    "mtime": 1779728683.7710435,
+    "ast_hash": "9960a24288958394ac50e57ff638b036",
+    "semantic_hash": "9960a24288958394ac50e57ff638b036"
+  }
+}
