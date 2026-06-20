@@ -110,6 +110,25 @@ function updateField(event) {
 const items = unwrapCollection(response.data); // handles Laravel paginated or plain array
 ```
 
+### Pre-filling DateTimeField with current local time
+`DateTimeField` accepts strings in `"YYYY-MM-DD HH:mm:00"` format (local time, space-separated).
+Use `nowDateTimeString()` from `src/utils/data.js` to initialize or reset required datetime fields:
+```js
+import { nowDateTimeString } from "../../utils/data";
+const [form, setForm] = useState({ ..., logged_at: nowDateTimeString() });
+// On reset: setForm({ ..., logged_at: nowDateTimeString() });
+```
+DateTimeField.onChange returns a value string (not a DOM event), so use a dedicated handler:
+```jsx
+<DateTimeField
+  value={form.logged_at}
+  onChange={(value) => {
+    setForm((current) => ({ ...current, logged_at: value }));
+    setFieldErrors((current) => ({ ...current, logged_at: undefined }));
+  }}
+/>
+```
+
 ### Page layout
 - Two-column grid: `<div className="grid gap-4 sm:gap-6 xl:grid-cols-[420px_1fr]">`
 - Sidebar panels with `xl:sticky xl:top-24`
@@ -145,14 +164,8 @@ The medical log API returns `type` and `note` (NOT `title` or `description`).
 
 ## Known Issues / Partially Implemented Features
 
-1. **DailyJournal.jsx and MasterArchive.jsx** — All visible text is hardcoded English with no i18n. Must be localized.
-2. **GlucoseLogs.jsx and MedicalLogs.jsx** — Use native `<input type="datetime-local">` instead of `<DateTimeField>`. Violates the Locale-Aware DateTime Rule. Should be replaced.
-3. **MasterArchive.jsx** — References `log.title` and `log.description` from medical logs, but the API returns `log.type` and `log.note`. This is a data field mismatch causing empty content.
-4. **Edit/Delete buttons in DailyJournal.jsx** — Rendered but not functional (no handlers, no API calls).
-5. **formatDate() in utils/data.js** — Hardcodes `"en"` locale. Does not adapt to Persian. Use locale-aware formatting when building new date displays.
-6. **DashboardLayout.jsx** — Navigation labels ("Quick-View", "Daily Journal", "Quick Access", "Archive / Data", "Master Archive") are hardcoded in English and not i18n'd.
-7. **StatCard component** — Exists but is unused anywhere in the app.
-8. **useAuth hook** — Thin wrapper, essentially unused. Pages import directly from `useAuthStore`.
+1. **StatCard component** — Exists but is unused anywhere in the app.
+2. **useAuth hook** — Thin wrapper, essentially unused. Pages import directly from `useAuthStore`.
 
 ## Notes
 - `rg` is unavailable in this environment; use `grep`/`find` when searching.

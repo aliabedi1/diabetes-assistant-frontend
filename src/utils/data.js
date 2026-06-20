@@ -14,6 +14,12 @@ export function unwrapCollection(payload) {
   return [];
 }
 
+export function nowDateTimeString() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+}
+
 export function formatDate(value) {
   if (!value) {
     return i18n.t("common.notSet");

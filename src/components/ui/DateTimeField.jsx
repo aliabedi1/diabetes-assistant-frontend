@@ -1,7 +1,10 @@
-import DatePicker from "react-multi-date-picker";
+import _DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { useTranslation } from "react-i18next";
+
+// Vite 8 does not unwrap __esModule CJS interop; resolve the actual component manually.
+const DatePicker = _DatePicker.default ?? _DatePicker;
 
 export default function DateTimeField({ label, value, onChange, error, placeholder, className = "" }) {
   const { i18n } = useTranslation();

@@ -3,15 +3,16 @@ import { useTranslation } from "react-i18next";
 import Alert from "../../components/ui/Alert";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
+import DateTimeField from "../../components/ui/DateTimeField";
 import Input from "../../components/ui/Input";
 import { createMedicalLog, getMedicalLogs } from "../../services/medical.service";
 import { getFieldErrors, getStatusMessage } from "../../utils/apiErrors";
-import { formatDate, unwrapCollection } from "../../utils/data";
+import { formatDate, nowDateTimeString, unwrapCollection } from "../../utils/data";
 
 export default function MedicalLogs() {
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
-  const [form, setForm] = useState({ amount: "", type: "", note: "", logged_at: new Date().toISOString().slice(0, 16) });
+  const [form, setForm] = useState({ amount: "", type: "", note: "", logged_at: nowDateTimeString() });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -50,7 +51,7 @@ export default function MedicalLogs() {
         ...form,
         amount: Number(form.amount),
       });
-      setForm({ amount: "", type: "", note: "", logged_at: new Date().toISOString().slice(0, 16) });
+      setForm({ amount: "", type: "", note: "", logged_at: nowDateTimeString() });
       setSuccess(t("medical.savedSuccess"));
       await loadLogs();
     } catch (requestError) {
@@ -74,7 +75,16 @@ export default function MedicalLogs() {
           <Alert type="success">{success}</Alert>
           <Input label={t("medical.amount")} name="amount" type="number" value={form.amount} onChange={updateField} placeholder="8.5" required min="0" step="0.01" error={fieldErrors.amount} />
           <Input label={t("medical.type")} name="type" value={form.type} onChange={updateField} placeholder={t("medical.typePlaceholder")} error={fieldErrors.type} />
-          <Input label={t("glucose.loggedAt")} name="logged_at" type="datetime-local" value={form.logged_at} onChange={updateField} required error={fieldErrors.logged_at} />
+          <DateTimeField
+            label={t("common.loggedAt")}
+            value={form.logged_at}
+            onChange={(value) => {
+              setForm((current) => ({ ...current, logged_at: value }));
+              setFieldErrors((current) => ({ ...current, logged_at: undefined }));
+            }}
+            placeholder={t("common.loggedAtPlaceholder")}
+            error={fieldErrors.logged_at}
+          />
           <Input label={t("medical.note")} name="note" value={form.note} onChange={updateField} placeholder={t("medical.notePlaceholder")} error={fieldErrors.note} />
           <Button className="w-full" disabled={saving}>{saving ? t("medical.saving") : t("medical.saveLog")}</Button>
         </form>
