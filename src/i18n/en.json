@@ -18,7 +18,8 @@
         "archiveData": "Archive / Data",
         "enterDashboard": "Enter Dashboard",
         "collapseSidebar": "Collapse sidebar",
-        "expandSidebar": "Expand sidebar"
+        "expandSidebar": "Expand sidebar",
+        "openMenu": "Open menu"
     },
     "home": {
         "title": "A modern diabetes companion for daily health logs.",

@@ -14,7 +14,6 @@ function IconHome() {
     </svg>
   );
 }
-
 function IconBook() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0">
@@ -23,7 +22,6 @@ function IconBook() {
     </svg>
   );
 }
-
 function IconArchive() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0">
@@ -33,7 +31,6 @@ function IconArchive() {
     </svg>
   );
 }
-
 function IconActivity() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0">
@@ -41,7 +38,6 @@ function IconActivity() {
     </svg>
   );
 }
-
 function IconClipboard() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 shrink-0">
@@ -50,7 +46,6 @@ function IconClipboard() {
     </svg>
   );
 }
-
 function IconChevronLeft({ className }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -58,30 +53,126 @@ function IconChevronLeft({ className }) {
     </svg>
   );
 }
+function IconMenu({ className }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
+const PRIMARY_LINKS = [
+  { to: "/dashboard", labelKey: "nav.quickView",    icon: <IconHome /> },
+  { to: "/journal",   labelKey: "nav.dailyJournal", icon: <IconBook /> },
+];
+const ARCHIVE_LINKS = [
+  { to: "/archive", labelKey: "nav.masterArchive", icon: <IconArchive /> },
+  { to: "/glucose", labelKey: "nav.glucoseLogs",   icon: <IconActivity /> },
+  { to: "/medical", labelKey: "nav.medicalLogs",   icon: <IconClipboard /> },
+];
+
+// Shared nav content for both desktop sidebar and mobile drawer.
+// collapsed=false is always used for mobile drawer.
+function SidebarNav({ collapsed = false, onNavigate }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {/* Logo */}
+      <div className={`flex shrink-0 items-center gap-3 p-4 ${collapsed ? "justify-center" : ""}`}>
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-sky-600 text-base font-black text-white">
+          D
+        </div>
+        {!collapsed && (
+          <div>
+            <p className="text-lg font-black text-slate-950 dark:text-white">{t("app.name").split(" ")[0]}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{t("app.name").split(" ")[1]}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Nav */}
+      <nav className="mt-4 flex-1 space-y-5 px-2">
+        <div>
+          {!collapsed && (
+            <p className="mb-1 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+              {t("nav.quickAccess")}
+            </p>
+          )}
+          <div className="space-y-1">
+            {PRIMARY_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                title={collapsed ? t(link.labelKey) : undefined}
+                onClick={onNavigate}
+                className={({ isActive }) =>
+                  `flex items-center rounded-2xl py-2.5 text-sm font-semibold transition-colors ${
+                    collapsed ? "justify-center px-2" : "gap-3 px-4"
+                  } ${
+                    isActive
+                      ? "bg-sky-600 text-white shadow-lg shadow-sky-600/20"
+                      : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+                  }`
+                }
+              >
+                {link.icon}
+                {!collapsed && t(link.labelKey)}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          {!collapsed && (
+            <p className="mb-1 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+              {t("nav.archiveData")}
+            </p>
+          )}
+          <div className="space-y-1 rounded-2xl border border-slate-200 bg-slate-50 p-1.5 dark:border-slate-700 dark:bg-slate-800/70">
+            {ARCHIVE_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                title={collapsed ? t(link.labelKey) : undefined}
+                onClick={onNavigate}
+                className={({ isActive }) =>
+                  `flex items-center rounded-xl py-2 text-sm font-semibold transition-colors ${
+                    collapsed ? "justify-center px-1" : "gap-3 px-2.5"
+                  } ${
+                    isActive
+                      ? "bg-slate-900 text-white dark:bg-sky-600"
+                      : "text-slate-600 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-700"
+                  }`
+                }
+              >
+                {link.icon}
+                {!collapsed && t(link.labelKey)}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </>
+  );
+}
 
 export default function DashboardLayout() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout);
-  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isRTL = i18n.dir() === "rtl";
-  // Chevron points left by default; rotate to point right when collapsing in LTR, expanding in RTL
+  // Chevron points left by default.
+  // LTR: expanded=← (correct), collapsed=→ (rotate-180)
+  // RTL: expanded=→ (rotate-180), collapsed=← (no rotation)
   const chevronRotate = isRTL
     ? collapsed ? "" : "rotate-180"
     : collapsed ? "rotate-180" : "";
-
-  const primaryLinks = [
-    { to: "/dashboard", label: t("nav.quickView"), icon: <IconHome /> },
-    { to: "/journal",   label: t("nav.dailyJournal"), icon: <IconBook /> },
-  ];
-
-  const archiveLinks = [
-    { to: "/archive", label: t("nav.masterArchive"), icon: <IconArchive /> },
-    { to: "/glucose", label: t("nav.glucoseLogs"),   icon: <IconActivity /> },
-    { to: "/medical", label: t("nav.medicalLogs"),   icon: <IconClipboard /> },
-  ];
 
   async function handleLogout() {
     await logout();
@@ -90,110 +181,37 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900">
-      {/* Sidebar */}
+
+      {/* ── Mobile overlay ─────────────────────────────────────────── */}
+      <div
+        className={`fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setMobileOpen(false)}
+      />
+
+      {/* ── Mobile drawer (slides from start side) ─────────────────── */}
+      <aside
+        className={`fixed inset-y-0 start-0 z-40 flex w-72 flex-col border-e border-slate-200 bg-white/95 backdrop-blur transition-transform duration-300 ease-in-out dark:border-slate-700 dark:bg-slate-800/95 lg:hidden ${
+          mobileOpen
+            ? "translate-x-0 rtl:translate-x-0"
+            : "-translate-x-full rtl:translate-x-full"
+        }`}
+      >
+        <SidebarNav onNavigate={() => setMobileOpen(false)} />
+      </aside>
+
+      {/* ── Desktop sidebar ────────────────────────────────────────── */}
+      {/* overflow-hidden clips content so the width transition is the only animation needed */}
       <aside
         className={`dashboard-sidebar fixed inset-y-0 start-0 hidden flex-col overflow-hidden border-r border-slate-200 bg-white/90 backdrop-blur transition-[width] duration-300 ease-in-out dark:border-slate-700 dark:bg-slate-800/90 lg:flex ${
           collapsed ? "w-16" : "w-72"
         }`}
       >
-        {/* Logo */}
-        <div className="flex shrink-0 items-center gap-3 p-4">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-sky-600 text-base font-black text-white">D</div>
-          <div
-            className={`overflow-hidden transition-[opacity,max-width] duration-200 ${
-              collapsed ? "max-w-0 opacity-0" : "max-w-xs opacity-100 delay-100"
-            }`}
-          >
-            <p className="whitespace-nowrap text-lg font-black text-slate-950 dark:text-white">{t("app.name").split(" ")[0]}</p>
-            <p className="whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">{t("app.name").split(" ")[1]}</p>
-          </div>
-        </div>
-
-        {/* Nav */}
-        <nav className="mt-4 flex-1 space-y-5 px-2 overflow-hidden">
-          {/* Primary */}
-          <div>
-            <div
-              className={`overflow-hidden transition-[opacity,max-height] duration-200 ${
-                collapsed ? "max-h-0 opacity-0" : "max-h-10 opacity-100 delay-100"
-              }`}
-            >
-              <p className="mb-1 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                {t("nav.quickAccess")}
-              </p>
-            </div>
-            <div className="space-y-1">
-              {primaryLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  title={collapsed ? link.label : undefined}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors ${
-                      collapsed ? "justify-center" : ""
-                    } ${
-                      isActive
-                        ? "bg-sky-600 text-white shadow-lg shadow-sky-600/20"
-                        : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
-                    }`
-                  }
-                >
-                  {link.icon}
-                  <span
-                    className={`whitespace-nowrap overflow-hidden transition-[opacity,max-width] duration-200 ${
-                      collapsed ? "max-w-0 opacity-0" : "max-w-xs opacity-100 delay-100"
-                    }`}
-                  >
-                    {link.label}
-                  </span>
-                </NavLink>
-              ))}
-            </div>
-          </div>
-
-          {/* Archive */}
-          <div>
-            <div
-              className={`overflow-hidden transition-[opacity,max-height] duration-200 ${
-                collapsed ? "max-h-0 opacity-0" : "max-h-10 opacity-100 delay-100"
-              }`}
-            >
-              <p className="mb-1 px-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                {t("nav.archiveData")}
-              </p>
-            </div>
-            <div className="space-y-1 rounded-2xl border border-slate-200 bg-slate-50 p-1.5 dark:border-slate-700 dark:bg-slate-800/70">
-              {archiveLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  title={collapsed ? link.label : undefined}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-semibold transition-colors ${
-                      collapsed ? "justify-center" : ""
-                    } ${
-                      isActive
-                        ? "bg-slate-900 text-white dark:bg-sky-600"
-                        : "text-slate-600 hover:bg-white dark:text-slate-300 dark:hover:bg-slate-700"
-                    }`
-                  }
-                >
-                  {link.icon}
-                  <span
-                    className={`whitespace-nowrap overflow-hidden transition-[opacity,max-width] duration-200 ${
-                      collapsed ? "max-w-0 opacity-0" : "max-w-xs opacity-100 delay-100"
-                    }`}
-                  >
-                    {link.label}
-                  </span>
-                </NavLink>
-              ))}
-            </div>
-          </div>
-        </nav>
+        <SidebarNav collapsed={collapsed} />
 
         {/* Collapse toggle */}
-        <div className="shrink-0 flex justify-center p-3 border-t border-slate-200 dark:border-slate-700">
+        <div className="flex shrink-0 justify-center border-t border-slate-200 p-3 dark:border-slate-700">
           <button
             onClick={() => setCollapsed((c) => !c)}
             title={t(collapsed ? "nav.expandSidebar" : "nav.collapseSidebar")}
@@ -204,47 +222,42 @@ export default function DashboardLayout() {
         </div>
       </aside>
 
-      {/* Main shell */}
-      <div className={`dashboard-shell transition-[padding] duration-300 ease-in-out ${collapsed ? "lg:ps-16" : "lg:ps-72"}`}>
-        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
-          <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 sm:px-5 lg:px-8">
-            <div>
+      {/* ── Main shell ─────────────────────────────────────────────── */}
+      <div
+        className={`dashboard-shell transition-[padding] duration-300 ease-in-out ${
+          collapsed ? "lg:ps-16" : "lg:ps-72"
+        }`}
+      >
+        {/* Header */}
+        {/* position:relative so the hamburger button can be absolutely placed top-right */}
+        <header className="relative sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+          <div className="flex items-center gap-3 px-4 py-3 sm:px-5 lg:px-8">
+            {/* Welcome text — grows to fill space */}
+            <div className="flex-1">
               <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.welcomeBack")}</p>
               <h1 className="text-lg font-bold text-slate-950 dark:text-white sm:text-xl">
                 {user?.name ? t("dashboard.welcomeUser", { name: user.name }) : t("dashboard.healthTracker")}
               </h1>
             </div>
-            <div className="flex flex-wrap items-center justify-end gap-2">
+
+            {/* Controls */}
+            <div className="flex items-center gap-2">
               <ThemeToggle />
               <LanguageToggle />
-              <nav className="hidden gap-1 md:flex lg:hidden">
-                {[...primaryLinks, ...archiveLinks].map((link) => (
-                  <NavLink key={link.to} to={link.to} className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">
-                    {link.label}
-                  </NavLink>
-                ))}
-              </nav>
               <Button variant="secondary" onClick={handleLogout}>{t("nav.logout")}</Button>
             </div>
-          </div>
-          <div className="border-t border-slate-200 px-3 py-2 dark:border-slate-700 md:hidden">
-            <nav className="flex gap-2 overflow-x-auto pb-1">
-              {[...primaryLinks, ...archiveLinks].map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    `shrink-0 rounded-xl px-3 py-2 text-xs font-semibold transition ${
-                      isActive ? "bg-sky-600 text-white" : "bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </nav>
+
+            {/* Hamburger — mobile only, always physically top-right via absolute */}
+            <button
+              onClick={() => setMobileOpen(true)}
+              aria-label={t("nav.openMenu")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden"
+            >
+              <IconMenu className="h-5 w-5" />
+            </button>
           </div>
         </header>
+
         <main className="px-3 py-6 sm:px-5 lg:px-8">
           <Outlet />
         </main>
