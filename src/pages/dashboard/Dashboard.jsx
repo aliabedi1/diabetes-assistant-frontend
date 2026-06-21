@@ -36,23 +36,45 @@ function getStatusFromAverage(value, t) {
   return { label: t("dashboard.statusHighRisk"), color: "rose", rating: "D" };
 }
 
-function getChartPath(points, width, height, minY, maxY) {
-  if (!points.length) {
-    return "";
-  }
+const PLOT_W = 100;
+const PLOT_H = 44;
+const AXIS_W = 22; // label column on each side
 
-  const spread = maxY - minY || 1;
-  return points
-    .map((point, index) => {
-      const x = (index / Math.max(points.length - 1, 1)) * width;
-      const y = height - ((point.value - minY) / spread) * height;
-      return `${index === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
-    })
-    .join(" ");
+function generateAxisTicks(min, max) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min >= max) {
+    return [min, max].filter(Number.isFinite);
+  }
+  const rawStep = (max - min) / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const step = Math.ceil(rawStep / mag) * mag || 1;
+  const ticks = [];
+  for (let v = Math.floor(min / step) * step; v <= max + step * 0.5; v += step) ticks.push(v);
+  return ticks.filter((v) => v >= min - step * 0.01 && v <= max + step * 0.01);
+}
+
+function toLocalDigits(num, lang) {
+  return lang === "fa"
+    ? String(Math.round(num)).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d])
+    : String(Math.round(num));
+}
+
+function buildSeriesPath(points, tsFrom, tsTo, vMin, vMax) {
+  if (!points.length) return { d: "", dots: [] };
+  const tRange = Math.max(tsTo - tsFrom, 1);
+  const vRange = Math.max(vMax - vMin, 1);
+  const mapped = points.map((p) => ({
+    x: ((p.ts - tsFrom) / tRange) * PLOT_W,
+    y: PLOT_H - ((p.v - vMin) / vRange) * PLOT_H,
+  }));
+  return {
+    d: mapped.map((pt, i) => `${i === 0 ? "M" : "L"}${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`).join(" "),
+    dots: mapped,
+  };
 }
 
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
   const user = useAuthStore((state) => state.user);
   const [glucoseLogs, setGlucoseLogs] = useState([]);
   const [medicalLogs, setMedicalLogs] = useState([]);
@@ -92,28 +114,47 @@ export default function Dashboard() {
 
   const healthStatus = getStatusFromAverage(averageGlucose, t);
 
-  const filteredChartLogs = useMemo(() => {
+  const glucoseChartPoints = useMemo(() => {
     const option = FILTER_OPTIONS.find((item) => item.key === filterKey) || FILTER_OPTIONS[2];
-    const from = Date.now() - option.hours * 60 * 60 * 1000;
-
-    const filtered = glucoseLogs.filter((log) => {
-      const timestamp = new Date(log.logged_at || log.created_at).getTime();
-      return Number.isFinite(timestamp) && timestamp >= from;
-    });
-
-    return filtered.sort(
-      (left, right) => new Date(left.logged_at || left.created_at).getTime() - new Date(right.logged_at || right.created_at).getTime(),
-    );
+    const from = Date.now() - option.hours * 3600000;
+    return glucoseLogs
+      .filter((log) => {
+        const ts = new Date(log.logged_at || log.created_at).getTime();
+        return Number.isFinite(ts) && ts >= from;
+      })
+      .sort((a, b) => new Date(a.logged_at || a.created_at).getTime() - new Date(b.logged_at || b.created_at).getTime())
+      .map((log) => ({ ts: new Date(log.logged_at || log.created_at).getTime(), v: Number(log.glucose_amount || log.amount || 0) }));
   }, [filterKey, glucoseLogs]);
 
-  const chartPoints = filteredChartLogs.map((log) => ({
-    value: Number(log.glucose_amount || log.amount || 0),
-    label: formatDate(log.logged_at || log.created_at),
-  }));
+  const medicalChartPoints = useMemo(() => {
+    const option = FILTER_OPTIONS.find((item) => item.key === filterKey) || FILTER_OPTIONS[2];
+    const from = Date.now() - option.hours * 3600000;
+    return medicalLogs
+      .filter((log) => {
+        const ts = new Date(log.logged_at || log.created_at).getTime();
+        return Number.isFinite(ts) && ts >= from && Number(log.amount) > 0;
+      })
+      .sort((a, b) => new Date(a.logged_at || a.created_at).getTime() - new Date(b.logged_at || b.created_at).getTime())
+      .map((log) => ({ ts: new Date(log.logged_at || log.created_at).getTime(), v: Number(log.amount) }));
+  }, [filterKey, medicalLogs]);
 
-  const chartMin = Math.min(...chartPoints.map((point) => point.value), 60);
-  const chartMax = Math.max(...chartPoints.map((point) => point.value), 220);
-  const chartPath = getChartPath(chartPoints, 100, 46, chartMin, chartMax);
+  const chartTimeTo = Date.now();
+  const chartTimeFrom = (() => {
+    const option = FILTER_OPTIONS.find((o) => o.key === filterKey) || FILTER_OPTIONS[2];
+    return chartTimeTo - option.hours * 3600000;
+  })();
+
+  const glucoseMin = Math.min(...glucoseChartPoints.map((p) => p.v), 60);
+  const glucoseMax = Math.max(...glucoseChartPoints.map((p) => p.v), 220);
+  const glucoseTicks = generateAxisTicks(glucoseMin, glucoseMax);
+
+  const hasMedicalData = medicalChartPoints.length > 0;
+  const medicalMin = hasMedicalData ? Math.min(...medicalChartPoints.map((p) => p.v)) : 0;
+  const medicalMax = hasMedicalData ? Math.max(...medicalChartPoints.map((p) => p.v)) : 10;
+  const medicalTicks = hasMedicalData ? generateAxisTicks(medicalMin, medicalMax) : [];
+
+  const glucoseSeries = buildSeriesPath(glucoseChartPoints, chartTimeFrom, chartTimeTo, glucoseMin, glucoseMax);
+  const medicalSeries = buildSeriesPath(medicalChartPoints, chartTimeFrom, chartTimeTo, medicalMin, medicalMax);
 
   const mergedHistory = useMemo(() => {
     const glucoseItems = glucoseLogs.map((log) => ({
@@ -247,29 +288,80 @@ export default function Dashboard() {
               </p>
             </div>
             <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/60">
-              <svg viewBox="0 0 100 46" className="h-40 w-full sm:h-52" role="img" aria-label={t("dashboard.glucoseTrend")}>
-                <rect x="0" y="0" width="100" height="46" fill="transparent" />
-                <line x1="0" y1="33" x2="100" y2="33" stroke="currentColor" className="text-emerald-300/50 dark:text-emerald-500/40" strokeWidth="0.5" />
-                <path d={chartPath} fill="none" stroke="currentColor" className="text-sky-600 dark:text-sky-400" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
-                {chartPoints.map((point, index) => {
-                  const spread = chartMax - chartMin || 1;
-                  const x = (index / Math.max(chartPoints.length - 1, 1)) * 100;
-                  const y = 46 - ((point.value - chartMin) / spread) * 46;
+              <svg
+                viewBox={`0 0 ${AXIS_W * 2 + PLOT_W} ${PLOT_H + 8}`}
+                className="h-40 w-full sm:h-52"
+                role="img"
+                aria-label={t("dashboard.glucoseTrend")}
+              >
+                <g transform={`translate(${AXIS_W}, 4)`}>
+                  {/* Horizontal grid lines at glucose tick positions */}
+                  {glucoseTicks.map((tick) => {
+                    const y = (PLOT_H - ((tick - glucoseMin) / (glucoseMax - glucoseMin || 1)) * PLOT_H).toFixed(1);
+                    return <line key={tick} x1="0" y1={y} x2={PLOT_W} y2={y} stroke="currentColor" className="text-slate-200 dark:text-slate-600/60" strokeWidth="0.5" />;
+                  })}
+
+                  {/* Target range band 80–140 mg/dL */}
+                  {(() => {
+                    const vRange = glucoseMax - glucoseMin || 1;
+                    const y1 = PLOT_H - ((Math.min(140, glucoseMax) - glucoseMin) / vRange) * PLOT_H;
+                    const y2 = PLOT_H - ((Math.max(80, glucoseMin) - glucoseMin) / vRange) * PLOT_H;
+                    return y1 < y2 ? <rect x="0" y={y1.toFixed(1)} width={PLOT_W} height={(y2 - y1).toFixed(1)} fill="currentColor" className="text-emerald-400/15 dark:text-emerald-400/10" /> : null;
+                  })()}
+
+                  {/* Medical series — dashed violet, drawn first so glucose renders on top */}
+                  {hasMedicalData && medicalSeries.d && (
+                    <path d={medicalSeries.d} fill="none" stroke="currentColor" className="text-violet-500 dark:text-violet-400" strokeWidth="1.6" strokeDasharray="3 2" vectorEffect="non-scaling-stroke" />
+                  )}
+                  {hasMedicalData && medicalSeries.dots.map((pt, i) => (
+                    <circle key={i} cx={pt.x.toFixed(1)} cy={pt.y.toFixed(1)} r="1.6" fill="currentColor" className="text-violet-500 dark:text-violet-400" />
+                  ))}
+
+                  {/* Glucose series — solid sky */}
+                  {glucoseSeries.d && (
+                    <path d={glucoseSeries.d} fill="none" stroke="currentColor" className="text-sky-600 dark:text-sky-400" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
+                  )}
+                  {glucoseSeries.dots.map((pt, i) => (
+                    <circle key={i} cx={pt.x.toFixed(1)} cy={pt.y.toFixed(1)} r="1.4" fill="currentColor" className="text-sky-500 dark:text-sky-300" />
+                  ))}
+                </g>
+
+                {/* Glucose Y-axis labels — logical start (left LTR, right RTL) */}
+                {glucoseTicks.map((tick) => {
+                  const svgY = (PLOT_H - ((tick - glucoseMin) / (glucoseMax - glucoseMin || 1)) * PLOT_H + 4 + 1.5).toFixed(1);
                   return (
-                    <circle
-                      key={`${point.label}-${index}`}
-                      cx={x}
-                      cy={y}
-                      r="1.4"
-                      fill="currentColor"
-                      className="text-sky-500 dark:text-sky-300"
-                    />
+                    <text key={tick} x={isRTL ? AXIS_W + PLOT_W + 2 : AXIS_W - 2} y={svgY} textAnchor={isRTL ? "start" : "end"} fontSize="4.5" fill="currentColor" className="text-sky-500 dark:text-sky-400">
+                      {toLocalDigits(tick, i18n.language)}
+                    </text>
+                  );
+                })}
+
+                {/* Medical Y-axis labels — logical end (right LTR, left RTL) */}
+                {hasMedicalData && medicalTicks.map((tick) => {
+                  const svgY = (PLOT_H - ((tick - medicalMin) / (medicalMax - medicalMin || 1)) * PLOT_H + 4 + 1.5).toFixed(1);
+                  return (
+                    <text key={tick} x={isRTL ? AXIS_W - 2 : AXIS_W + PLOT_W + 2} y={svgY} textAnchor={isRTL ? "end" : "start"} fontSize="4.5" fill="currentColor" className="text-violet-500 dark:text-violet-400">
+                      {toLocalDigits(tick, i18n.language)}
+                    </text>
                   );
                 })}
               </svg>
-              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                {t("dashboard.targetRangeHint")} {chartPoints.length} {t("dashboard.pointsShown")}.
-              </p>
+
+              {/* Legend */}
+              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <svg width="16" height="3" aria-hidden="true"><line x1="0" y1="1.5" x2="16" y2="1.5" stroke="currentColor" className="text-sky-500" strokeWidth="2" /></svg>
+                  {t("nav.glucoseLogs")}
+                </span>
+                {hasMedicalData && (
+                  <span className="flex items-center gap-1.5">
+                    <svg width="16" height="3" aria-hidden="true"><line x1="0" y1="1.5" x2="16" y2="1.5" stroke="currentColor" className="text-violet-500" strokeWidth="2" strokeDasharray="3 2" /></svg>
+                    {t("nav.medicalLogs")}
+                  </span>
+                )}
+                <span className="ms-auto">{glucoseChartPoints.length} {t("dashboard.pointsShown")}</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{t("dashboard.targetRangeHint")}</p>
             </div>
           </div>
         </Card>
@@ -325,12 +417,6 @@ export default function Dashboard() {
               value={quickForm.glucose_amount}
               onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
             />
-            <DateTimeField
-              label={t("common.loggedAt")}
-              value={quickForm.logged_at}
-              onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
-              placeholder={t("common.loggedAtPlaceholder")}
-            />
             <div className="col-span-2">
               <Input
                 label={t("glucose.notes")}
@@ -338,6 +424,14 @@ export default function Dashboard() {
                 value={quickForm.note}
                 onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
                 placeholder={t("glucose.notesPlaceholder")}
+              />
+            </div>
+            <div className="col-span-2 sm:col-span-4 xl:col-span-2">
+              <DateTimeField
+                label={t("common.loggedAt")}
+                value={quickForm.logged_at}
+                onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
+                placeholder={t("common.loggedAtPlaceholder")}
               />
             </div>
             <button
