@@ -155,7 +155,15 @@
         "noLogs": "No medical logs yet.",
         "savedSuccess": "Medical log saved.",
         "errorSaving": "Unable to save medical log.",
-        "errorLoading": "Unable to load medical logs."
+        "errorLoading": "Unable to load medical logs.",
+        "medicine": "Medicine",
+        "medicinePlaceholder": "Search or add medicine...",
+        "recentlyUsed": "Recently used",
+        "suggested": "Suggested",
+        "addNew": "+ Add '{{name}}'",
+        "global": "Global",
+        "clearMedicine": "Clear",
+        "noResults": "No medicines found"
     },
     "notFound": {
         "title": "Page not found",

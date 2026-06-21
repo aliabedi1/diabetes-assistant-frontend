@@ -155,7 +155,15 @@
         "noLogs": "هنوز سابقه پزشکی وجود ندارد.",
         "savedSuccess": "سابقه پزشکی ذخیره شد.",
         "errorSaving": "ذخیره سابقه پزشکی با خطا مواجه شد.",
-        "errorLoading": "بارگذاری سوابق پزشکی با خطا مواجه شد."
+        "errorLoading": "بارگذاری سوابق پزشکی با خطا مواجه شد.",
+        "medicine": "دارو",
+        "medicinePlaceholder": "جستجو یا افزودن دارو...",
+        "recentlyUsed": "اخیراً استفاده شده",
+        "suggested": "پیشنهادی",
+        "addNew": "+ افزودن '{{name}}'",
+        "global": "عمومی",
+        "clearMedicine": "پاک کردن",
+        "noResults": "دارویی یافت نشد"
     },
     "notFound": {
         "title": "صفحه پیدا نشد",
