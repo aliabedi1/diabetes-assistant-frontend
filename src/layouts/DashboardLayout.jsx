@@ -229,32 +229,32 @@ export default function DashboardLayout() {
         }`}
       >
         {/* Header */}
-        {/* position:relative so the hamburger button can be absolutely placed top-right */}
-        <header className="relative sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
           <div className="flex items-center gap-3 px-4 py-3 sm:px-5 lg:px-8">
+            {/* Hamburger — mobile only; as first DOM child it sits at the logical start
+                (left in LTR, right in RTL) which matches which side the drawer opens from */}
+            <button
+              onClick={() => setMobileOpen(true)}
+              aria-label={t("nav.openMenu")}
+              className="flex shrink-0 items-center justify-center rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden"
+            >
+              <IconMenu className="h-5 w-5" />
+            </button>
+
             {/* Welcome text — grows to fill space */}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.welcomeBack")}</p>
-              <h1 className="text-lg font-bold text-slate-950 dark:text-white sm:text-xl">
+              <h1 className="truncate text-lg font-bold text-slate-950 dark:text-white sm:text-xl">
                 {user?.name ? t("dashboard.welcomeUser", { name: user.name }) : t("dashboard.healthTracker")}
               </h1>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <ThemeToggle />
               <LanguageToggle />
               <Button variant="secondary" onClick={handleLogout}>{t("nav.logout")}</Button>
             </div>
-
-            {/* Hamburger — mobile only, always physically top-right via absolute */}
-            <button
-              onClick={() => setMobileOpen(true)}
-              aria-label={t("nav.openMenu")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center rounded-xl p-2 text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden"
-            >
-              <IconMenu className="h-5 w-5" />
-            </button>
           </div>
         </header>
 
