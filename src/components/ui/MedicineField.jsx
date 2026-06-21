@@ -100,7 +100,7 @@ export default function MedicineField({ label, value, onChange, error }) {
     : globalMedicines.map((m) => ({ kind: "medicine", ...m }));
 
   function selectMedicine(m) {
-    onChange({ type: "existing", id: m.id, name_en: m.name_en, name_fa: m.name_fa });
+    onChange({ mode: "existing", id: m.id, name_en: m.name_en, name_fa: m.name_fa });
     setQuery("");
     setIsOpen(false);
     setActiveIndex(-1);
@@ -109,7 +109,7 @@ export default function MedicineField({ label, value, onChange, error }) {
   function confirmCreate() {
     const name = query.trim();
     if (!name) return;
-    onChange({ type: "new", name });
+    onChange({ mode: "new", name });
     setQuery("");
     setIsOpen(false);
     setActiveIndex(-1);
@@ -165,7 +165,7 @@ export default function MedicineField({ label, value, onChange, error }) {
 
   // The name to display in the input when a medicine is selected
   const selectedDisplayName = value
-    ? value.type === "existing"
+    ? value.mode === "existing"
       ? (i18n.language === "fa" ? (value.name_fa || value.name_en) : (value.name_en || value.name_fa))
       : value.name
     : null;
@@ -182,7 +182,7 @@ export default function MedicineField({ label, value, onChange, error }) {
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
-            onChange(e.target.value.trim() ? { type: "new", name: e.target.value.trim() } : null);
+            onChange(e.target.value.trim() ? { mode: "new", name: e.target.value.trim() } : null);
           }}
           placeholder={t("medical.medicinePlaceholder")}
           className={`${CLS_BASE} ${error ? CLS_ERROR : CLS_NORMAL}`}

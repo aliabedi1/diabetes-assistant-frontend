@@ -163,7 +163,8 @@
         "addNew": "+ Add '{{name}}'",
         "global": "Global",
         "clearMedicine": "Clear",
-        "noResults": "No medicines found"
+        "noResults": "No medicines found",
+        "medicineRequired": "Please select or enter a medicine"
     },
     "notFound": {
         "title": "Page not found",

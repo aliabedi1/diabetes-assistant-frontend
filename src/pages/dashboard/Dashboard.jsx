@@ -4,8 +4,10 @@ import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
 import DateTimeField from "../../components/ui/DateTimeField";
 import Alert from "../../components/ui/Alert";
+import MedicineField from "../../components/ui/MedicineField";
 import { createGlucoseLog, getGlucoseLogs } from "../../services/glucose.service";
 import { createMedicalLog, getMedicalLogs } from "../../services/medical.service";
+import { createMedicineLog } from "../../services/medicine.service";
 import { formatDate, unwrapCollection } from "../../utils/data";
 import { useAuthStore } from "../../store/auth.store";
 
@@ -79,6 +81,9 @@ export default function Dashboard() {
   const [glucoseLogs, setGlucoseLogs] = useState([]);
   const [medicalLogs, setMedicalLogs] = useState([]);
   const [quickForm, setQuickForm] = useState({ glucose_amount: "", note: "", logged_at: "" });
+  const [activeTab, setActiveTab] = useState("glucose");
+  const [medQuickForm, setMedQuickForm] = useState({ amount: "", logged_at: "" });
+  const [quickMedicine, setQuickMedicine] = useState(null);
   const [filterKey, setFilterKey] = useState("24h");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -222,6 +227,39 @@ export default function Dashboard() {
       await Promise.all(requests);
       await loadDashboard();
       setQuickForm({ glucose_amount: "", note: "", logged_at: "" });
+      setSuccess(t("dashboard.quickEntrySaved"));
+    } catch {
+      setError(t("dashboard.quickEntrySaveError"));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function submitQuickMedicine(event) {
+    event.preventDefault();
+    if (!quickMedicine?.mode) {
+      setError(t("medical.medicineRequired"));
+      return;
+    }
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    const payload = {};
+    if (quickMedicine.mode === "existing") {
+      payload.medicine_id = quickMedicine.id;
+    } else {
+      payload.medicine_name = quickMedicine.name.trim();
+    }
+    const amount = Number(medQuickForm.amount);
+    if (amount > 0) payload.amount = amount;
+    if (medQuickForm.logged_at) payload.logged_at = medQuickForm.logged_at;
+
+    try {
+      await createMedicineLog(payload);
+      await loadDashboard();
+      setMedQuickForm({ amount: "", logged_at: "" });
+      setQuickMedicine(null);
       setSuccess(t("dashboard.quickEntrySaved"));
     } catch {
       setError(t("dashboard.quickEntrySaveError"));
@@ -402,34 +440,90 @@ export default function Dashboard() {
         <Card id="quick-add-panel">
           <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.quickAdd")}</h3>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("dashboard.quickAddSubtitle")}</p>
-          <form onSubmit={submitQuickAdd} className="mt-5 space-y-3">
+
+          {/* Tab switcher */}
+          <div className="mt-4 flex rounded-2xl bg-slate-100 p-1 dark:bg-slate-700/60">
+            {[
+              { key: "glucose", label: t("home.glucose") },
+              { key: "medicine", label: t("medical.medicine") },
+            ].map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => { setActiveTab(key); setError(""); setSuccess(""); }}
+                className={`flex-1 rounded-xl py-2 text-sm font-semibold transition ${
+                  activeTab === key
+                    ? "bg-white text-slate-950 shadow-sm dark:bg-slate-600 dark:text-white"
+                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <form
+            onSubmit={activeTab === "glucose" ? submitQuickAdd : submitQuickMedicine}
+            className="mt-4 space-y-3"
+          >
             <div className="space-y-2">
               <Alert>{error}</Alert>
               <Alert type="success">{success}</Alert>
             </div>
-            <Input
-              label={t("glucose.glucoseAmount")}
-              name="glucose_amount"
-              type="number"
-              inputMode="numeric"
-              min="1"
-              placeholder="120"
-              value={quickForm.glucose_amount}
-              onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
-            />
-            <Input
-              label={t("glucose.notes")}
-              name="note"
-              value={quickForm.note}
-              onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
-              placeholder={t("glucose.notesPlaceholder")}
-            />
-            <DateTimeField
-              label={t("common.loggedAt")}
-              value={quickForm.logged_at}
-              onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
-              placeholder={t("common.loggedAtPlaceholder")}
-            />
+
+            {activeTab === "glucose" ? (
+              <>
+                <Input
+                  label={t("glucose.glucoseAmount")}
+                  name="glucose_amount"
+                  type="number"
+                  inputMode="numeric"
+                  min="1"
+                  placeholder="120"
+                  value={quickForm.glucose_amount}
+                  onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
+                />
+                <Input
+                  label={t("glucose.notes")}
+                  name="note"
+                  value={quickForm.note}
+                  onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
+                  placeholder={t("glucose.notesPlaceholder")}
+                />
+                <DateTimeField
+                  label={t("common.loggedAt")}
+                  value={quickForm.logged_at}
+                  onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
+                  placeholder={t("common.loggedAtPlaceholder")}
+                />
+              </>
+            ) : (
+              <>
+                <MedicineField
+                  label={t("medical.medicine")}
+                  value={quickMedicine}
+                  onChange={setQuickMedicine}
+                />
+                <Input
+                  label={t("medical.amount")}
+                  name="med_amount"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  step="0.01"
+                  placeholder="1"
+                  value={medQuickForm.amount}
+                  onChange={(event) => setMedQuickForm((state) => ({ ...state, amount: event.target.value }))}
+                />
+                <DateTimeField
+                  label={t("common.loggedAt")}
+                  value={medQuickForm.logged_at}
+                  onChange={(nextValue) => setMedQuickForm((state) => ({ ...state, logged_at: nextValue }))}
+                  placeholder={t("common.loggedAtPlaceholder")}
+                />
+              </>
+            )}
+
             <button
               type="submit"
               disabled={saving}

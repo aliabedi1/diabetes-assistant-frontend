@@ -163,7 +163,8 @@
         "addNew": "+ افزودن '{{name}}'",
         "global": "عمومی",
         "clearMedicine": "پاک کردن",
-        "noResults": "دارویی یافت نشد"
+        "noResults": "دارویی یافت نشد",
+        "medicineRequired": "لطفاً دارو را انتخاب یا وارد کنید"
     },
     "notFound": {
         "title": "صفحه پیدا نشد",

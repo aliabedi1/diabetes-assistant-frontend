@@ -66,8 +66,15 @@ export default function MedicalLogs() {
       note: form.note,
       logged_at: form.logged_at || undefined,
     };
-    if (medicine?.type === "existing") payload.medicine_id = medicine.id;
-    else if (medicine?.type === "new") payload.medicine_name = medicine.name;
+    if (medicine?.mode === "existing") {
+      payload.medicine_id = medicine.id;
+    } else if (medicine?.mode === "new") {
+      payload.medicine_name = medicine.name.trim();
+    } else {
+      setFieldErrors({ medicine_id: [t("medical.medicineRequired")] });
+      setSaving(false);
+      return;
+    }
 
     try {
       await createMedicineLog(payload);
