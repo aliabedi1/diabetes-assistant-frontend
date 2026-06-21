@@ -23,6 +23,12 @@ export default function DateTimeField({ label, value, onChange, error, placehold
       return;
     }
 
+    // Reject future timestamps (belt-and-suspenders alongside maxDate)
+    if (jsDate > new Date()) {
+      onChange("");
+      return;
+    }
+
     const year = jsDate.getFullYear();
     const month = String(jsDate.getMonth() + 1).padStart(2, "0");
     const day = String(jsDate.getDate()).padStart(2, "0");
@@ -38,6 +44,7 @@ export default function DateTimeField({ label, value, onChange, error, placehold
       <DatePicker
         value={value ? new Date(value.replace(" ", "T")) : ""}
         onChange={handleChange}
+        maxDate={new Date()}
         format="YYYY/MM/DD HH:mm"
         disableSecond
         calendar={isFa ? persian : undefined}
