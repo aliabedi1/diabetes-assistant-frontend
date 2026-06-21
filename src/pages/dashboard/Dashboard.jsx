@@ -399,7 +399,7 @@ export default function Dashboard() {
       </div>
 
       <div className="space-y-6">
-        <Card id="quick-add-panel" className="xl:sticky xl:top-24">
+        <Card id="quick-add-panel">
           <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.quickAdd")}</h3>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("dashboard.quickAddSubtitle")}</p>
           <form onSubmit={submitQuickAdd} className="mt-5 space-y-3">
