@@ -13,6 +13,7 @@ function extractUser(payload) {
 export const useAuthStore = create((set, get) => ({
     token: getToken(),
     user: null,
+    authChecked: false,
     loading: false,
     error: null,
 
@@ -68,18 +69,19 @@ export const useAuthStore = create((set, get) => ({
 
     loadUser: async () => {
         if (!get().token) {
+            set({ authChecked: true });
             return null;
         }
 
         try {
             const response = await me();
             const user = extractUser(response.data);
-            set({ user });
+            set({ user, authChecked: true });
             return user;
         } catch (error) {
             void error;
             removeToken();
-            set({ token: null, user: null });
+            set({ token: null, user: null, authChecked: true });
             return null;
         }
     },

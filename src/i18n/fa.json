@@ -15,7 +15,8 @@
         "dailyJournal": "دفترچه روزانه",
         "masterArchive": "آرشیو کلی",
         "quickAccess": "دسترسی سریع",
-        "archiveData": "آرشیو / داده"
+        "archiveData": "آرشیو / داده",
+        "enterDashboard": "ورود به داشبورد"
     },
     "home": {
         "title": "یک همراه مدرن برای ثبت روزانه سلامتی دیابت",
@@ -61,6 +62,7 @@
     },
     "dashboard": {
         "welcomeBack": "خوش آمدید",
+        "welcomeUser": "خوش آمدید، {{name}}",
         "healthTracker": "ردیاب سلامت",
         "overview": "نمای کلی",
         "keepInSync": "خوانش‌های قند خون و یادداشت‌های پزشکی امروز را همگام نگه دارید.",

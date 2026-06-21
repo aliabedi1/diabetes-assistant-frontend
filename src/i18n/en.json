@@ -15,7 +15,8 @@
         "dailyJournal": "Daily Journal",
         "masterArchive": "Master Archive",
         "quickAccess": "Quick Access",
-        "archiveData": "Archive / Data"
+        "archiveData": "Archive / Data",
+        "enterDashboard": "Enter Dashboard"
     },
     "home": {
         "title": "A modern diabetes companion for daily health logs.",
@@ -61,6 +62,7 @@
     },
     "dashboard": {
         "welcomeBack": "Welcome back",
+        "welcomeUser": "Welcome, {{name}}",
         "healthTracker": "Health tracker",
         "overview": "Overview",
         "keepInSync": "Keep today's glucose readings and medical notes in sync.",

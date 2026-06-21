@@ -81,7 +81,9 @@ export default function DashboardLayout() {
           <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3 sm:px-5 lg:px-8">
             <div>
               <p className="text-sm text-slate-500 dark:text-slate-400">{t("dashboard.welcomeBack")}</p>
-              <h1 className="text-lg font-bold text-slate-950 dark:text-white sm:text-xl">{user?.name || t("dashboard.healthTracker")}</h1>
+              <h1 className="text-lg font-bold text-slate-950 dark:text-white sm:text-xl">
+                {user?.name ? t("dashboard.welcomeUser", { name: user.name }) : t("dashboard.healthTracker")}
+              </h1>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2">
               <ThemeToggle />

@@ -11,14 +11,15 @@ import MasterArchive from "../pages/archive/MasterArchive";
 import NotFound from "../pages/notfound/NotFound";
 
 import ProtectedRoute from "./ProtectedRoutes";
+import GuestRoute from "./GuestRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 export default function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+            <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
 
             {/* Protected App */}
             <Route

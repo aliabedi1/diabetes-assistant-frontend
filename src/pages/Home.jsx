@@ -4,9 +4,16 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import ThemeToggle from "../components/ThemeToggle";
 import LanguageToggle from "../components/LanguageToggle";
+import { useAuthStore } from "../store/auth.store";
 
 export default function Home() {
   const { t } = useTranslation();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  async function handleLogout() {
+    await logout();
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
@@ -23,8 +30,17 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
             <ThemeToggle />
             <LanguageToggle />
-            <Link to="/login" className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10 sm:px-5 sm:py-3">{t("nav.login")}</Link>
-            <Link to="/register" className="rounded-2xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 sm:px-5 sm:py-3">{t("nav.register") || "Register"}</Link>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10 sm:px-5 sm:py-3">{t("nav.enterDashboard")}</Link>
+                <button onClick={handleLogout} className="rounded-2xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 sm:px-5 sm:py-3">{t("nav.logout")}</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10 sm:px-5 sm:py-3">{t("nav.login")}</Link>
+                <Link to="/register" className="rounded-2xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 sm:px-5 sm:py-3">{t("nav.register")}</Link>
+              </>
+            )}
           </div>
         </nav>
         <div className="grid min-h-[calc(100vh-120px)] items-center gap-8 py-10 sm:gap-12 sm:py-16 lg:grid-cols-[1.1fr_0.9fr]">
@@ -39,8 +55,14 @@ export default function Home() {
               {t("home.description")}
             </p>
             <div className="mt-8 grid gap-3 sm:mt-10 sm:flex sm:flex-wrap sm:gap-4">
-              <Button as={Link} to="/register" className="w-full sm:w-auto">{t("home.getStarted") || "Get started"}</Button>
-              <Button as={Link} to="/login" variant="secondary" className="w-full sm:w-auto">{t("home.openDashboard")}</Button>
+              {user ? (
+                <Button as={Link} to="/dashboard" className="w-full sm:w-auto">{t("nav.enterDashboard")}</Button>
+              ) : (
+                <>
+                  <Button as={Link} to="/register" className="w-full sm:w-auto">{t("home.getStarted")}</Button>
+                  <Button as={Link} to="/login" variant="secondary" className="w-full sm:w-auto">{t("home.openDashboard")}</Button>
+                </>
+              )}
             </div>
           </div>
           <Card className="bg-white/95 text-slate-950 shadow-lg shadow-slate-200/60 dark:bg-slate-800/95 dark:text-white dark:shadow-none">
