@@ -16,7 +16,9 @@
         "masterArchive": "آرشیو کلی",
         "quickAccess": "دسترسی سریع",
         "archiveData": "آرشیو / داده",
-        "enterDashboard": "ورود به داشبورد"
+        "enterDashboard": "ورود به داشبورد",
+        "collapseSidebar": "بستن منو",
+        "expandSidebar": "باز کردن منو"
     },
     "home": {
         "title": "یک همراه مدرن برای ثبت روزانه سلامتی دیابت",

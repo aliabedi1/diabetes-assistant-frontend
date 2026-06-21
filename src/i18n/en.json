@@ -16,7 +16,9 @@
         "masterArchive": "Master Archive",
         "quickAccess": "Quick Access",
         "archiveData": "Archive / Data",
-        "enterDashboard": "Enter Dashboard"
+        "enterDashboard": "Enter Dashboard",
+        "collapseSidebar": "Collapse sidebar",
+        "expandSidebar": "Expand sidebar"
     },
     "home": {
         "title": "A modern diabetes companion for daily health logs.",
