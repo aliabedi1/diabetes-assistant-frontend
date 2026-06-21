@@ -402,8 +402,8 @@ export default function Dashboard() {
         <Card id="quick-add-panel" className="xl:sticky xl:top-24">
           <h3 className="text-xl font-black text-slate-950 dark:text-white">{t("dashboard.quickAdd")}</h3>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("dashboard.quickAddSubtitle")}</p>
-          <form onSubmit={submitQuickAdd} className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-2">
-            <div className="col-span-full space-y-2">
+          <form onSubmit={submitQuickAdd} className="mt-5 space-y-3">
+            <div className="space-y-2">
               <Alert>{error}</Alert>
               <Alert type="success">{success}</Alert>
             </div>
@@ -417,27 +417,23 @@ export default function Dashboard() {
               value={quickForm.glucose_amount}
               onChange={(event) => setQuickForm((state) => ({ ...state, glucose_amount: event.target.value }))}
             />
-            <div className="col-span-2">
-              <Input
-                label={t("glucose.notes")}
-                name="note"
-                value={quickForm.note}
-                onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
-                placeholder={t("glucose.notesPlaceholder")}
-              />
-            </div>
-            <div className="col-span-2 sm:col-span-4 xl:col-span-2">
-              <DateTimeField
-                label={t("common.loggedAt")}
-                value={quickForm.logged_at}
-                onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
-                placeholder={t("common.loggedAtPlaceholder")}
-              />
-            </div>
+            <Input
+              label={t("glucose.notes")}
+              name="note"
+              value={quickForm.note}
+              onChange={(event) => setQuickForm((state) => ({ ...state, note: event.target.value }))}
+              placeholder={t("glucose.notesPlaceholder")}
+            />
+            <DateTimeField
+              label={t("common.loggedAt")}
+              value={quickForm.logged_at}
+              onChange={(nextValue) => setQuickForm((state) => ({ ...state, logged_at: nextValue }))}
+              placeholder={t("common.loggedAtPlaceholder")}
+            />
             <button
               type="submit"
               disabled={saving}
-              className="col-span-2 sm:col-span-4 xl:col-span-2 w-full rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition duration-200 active:scale-[0.99] hover:bg-sky-700 disabled:opacity-60 dark:bg-sky-500 dark:hover:bg-sky-400"
+              className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition duration-200 active:scale-[0.99] hover:bg-sky-700 disabled:opacity-60 dark:bg-sky-500 dark:hover:bg-sky-400"
             >
               {saving ? t("common.loading") : t("dashboard.saveQuickLog")}
             </button>
