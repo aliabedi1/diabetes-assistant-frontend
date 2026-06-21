@@ -7,6 +7,10 @@ export function unwrapCollection(payload) {
     return value;
   }
 
+  if (Array.isArray(value?.items)) {
+    return value.items;
+  }
+
   if (Array.isArray(value?.data)) {
     return value.data;
   }
@@ -25,10 +29,17 @@ export function formatDate(value) {
     return i18n.t("common.notSet");
   }
 
+  // Normalise "YYYY-MM-DD HH:mm:ss" → ISO so all engines parse it correctly
+  const d = new Date(String(value).replace(" ", "T"));
+
+  if (Number.isNaN(d.getTime())) {
+    return i18n.t("common.notSet");
+  }
+
   const locale = i18n.language === "fa" ? "fa-IR-u-ca-persian" : "en";
 
   return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
-  }).format(new Date(value));
+  }).format(d);
 }
